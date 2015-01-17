@@ -1,0 +1,28 @@
+{
+  "name": "graphplayground",
+  "private": true,
+  "dependencies": {
+    "paper": "~0.9.21",
+    "bootstrap-sass-official": "#3.2.0+2"
+  },
+  "version": "0.0.0",
+  "authors": [
+    "JoshuaSP <joshua.s.penman@gmail.com>"
+  ],
+  "description": "Graph Playground",
+  "moduleType": [
+    "amd",
+    "es6",
+    "globals",
+    "node",
+    "yui"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
