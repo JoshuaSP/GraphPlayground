@@ -27,13 +27,21 @@ function createGraphNode(point,i) {
 }
 
 
-var graphNodes = []
+graphNodes = []
 
 project.currentStyle = {
 	strokeColor: '#000000',
 	fillColor: 'salmon',
 	strokeWidth: 1.6
 };
+
+function deleteNode (gn) {
+	graphNodes[gn.idx] = null;
+	gn.remove();
+	gn.edges.forEach (function (edge) {
+		edge.remove();
+	});
+}
 
 
 var gn = selectedNode = null
@@ -43,21 +51,17 @@ function onMouseDown(event) {
 	if (!hitresult) {
 		var i = 0
 		while (graphNodes[i]) {i++;}
-		var newNode = createGraphNode(event.point,i);
+		gn = createGraphNode(event.point,i);
 		if (i < graphNodes.length) {
-			graphNodes[i] = newNode;
+			graphNodes[i] = gn;
 		}
 		else {
-			graphNodes.push(newNode);
+			graphNodes.push(gn);
 		}
 	} else if(['circle','label'].indexOf(hitresult.item.name) != -1) {
 		gn = hitresult.item.parent;
 		if (event.modifiers.command) {
-			graphNodes[gn.idx] = null;
-			gn.remove();
-			gn.edges.forEach (function (edge) {
-				edge.remove();
-			});
+			deleteNode(gn);
 		} else {
 			if(graphNodes[selectedNode]) {
 				graphNodes[selectedNode].children['circle'].fillColor = 'salmon';
@@ -98,16 +102,19 @@ function onMouseUp(event){
 		hitresult = project.hitTest(event.point);
 		if(['circle','label'].indexOf(hitresult.item.name) != -1) {
 			ngn = hitresult.item.parent;
-			var finaledge = edge.clone();
-			console.log(finaledge)
-			finaledge.segments[1].point = ngn.position;
-			finaledge.nodes = [gn.idx, ngn.idx];
-			gn.edges.push(finaledge);
-			ngn.edges.push(finaledge);
+			if ([].concat.apply([],gn.edges.map(function (edge) {
+						return edge.segments;
+					})).indexOf(ngn.idx) < 0) {
+				var finaledge = edge.clone();
+				finaledge.segments[1].point = ngn.position;
+				finaledge.nodes = [gn.idx, ngn.idx];
+				gn.edges.push(finaledge);
+				ngn.edges.push(finaledge);
+			};
 		}
 		edge.remove();
 		edge = null;
-	}
+	} else if (gn && !event.point.isInside(view.bounds)) {deleteNode(gn)}
 }
 
 

@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
   </head>
-  <body style="background-color:black">
+  <body style="background-color:#020603">
     <!--[if lt IE 10]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
@@ -31,14 +31,20 @@
         <h3 class="text-muted">GraphPlayground</h3>
       </div>
 
-      <div class="jumbotron" style="background-color:ivory">
-        <canvas id="canvas1" resize></canvas>
-        
-        <!-- <h1>'Allo, 'Allo!</h1>
-        <p class="lead">Always a pleasure scaffolding your apps.</p>
-        <p><a class="btn btn-lg btn-success" href="#">Splendid! <span class="glyphicon glyphicon-ok"></span></a></p> -->
+      
+        <canvas id="canvas1" style='border-radius:14px; background-color:navajowhite' width='700' height='225'></canvas>
+   
+      <div width = '700' class ="button-list" role='group'>
+        <button type="button" class="btn btn-primary">Depth-First Search</button>
+        <button type="button" class="btn btn-primary">Breadth-First Search</button>
+        <button type="button" class="btn btn-primary">Pim's Algorithm</button>
+        <button type="button" class="btn btn-primary">Dijkstra's Algorithm</button>
       </div>
-
+      <div class = "button-list">
+       <button type="button" class="btn btn-primary">Minimum Spanning Tree</button>
+        <button type="button" class="btn btn-primary">Travelling Salesman</button>
+      </div>
+      <canvas id="canvas2" style='margin-top: 25px; border-radius:14px; background-color:navajowhite' width='700' height='225'></canvas>
       <div class="row marketing">
         <div class="col-lg-6">
           <h4>HTML5 Boilerplate</h4>
@@ -93,8 +99,8 @@
 
         <!-- build:js({app,.tmp}) scripts/main.js -->
         <script src="scripts/main.js"></script>
-        <script type="text/paperscript" src="scripts/firstcanvas.js" canvas="canvas1">
-</script>
+        <script type="text/paperscript" src="scripts/firstcanvas.js" canvas="canvas1"/>
+        <script type="text/paperscript" src="scripts/secondcanvas.js" canvas="canvas2"/>
         <!-- endbuild -->
 </body>
 </html>
