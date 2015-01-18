@@ -28,7 +28,6 @@ function createGraphNode(point,i) {
 
 
 var graphNodes = []
-var edges = []
 
 project.currentStyle = {
 	strokeColor: '#000000',
@@ -56,6 +55,9 @@ function onMouseDown(event) {
 		if (event.modifiers.command) {
 			graphNodes[gn.idx] = null;
 			gn.remove();
+			gn.edges.forEach (function (edge) {
+				edge.remove();
+			});
 		} else {
 			if(graphNodes[selectedNode]) {
 				graphNodes[selectedNode].children['circle'].fillColor = 'salmon';
@@ -84,9 +86,9 @@ function onMouseDrag(event) {
 			}
 		} else {
 			gn.position += event.delta;
-			// gn.edges.forEach (edge) {
-				
-			// }
+			gn.edges.forEach (function (edge) {
+				edge.segments[edge.nodes.indexOf(gn.idx)].point += event.delta;
+			});
 		}
 	}
 }
@@ -100,7 +102,6 @@ function onMouseUp(event){
 			console.log(finaledge)
 			finaledge.segments[1].point = ngn.position;
 			finaledge.nodes = [gn.idx, ngn.idx];
-			edges.push(finaledge);
 			gn.edges.push(finaledge);
 			ngn.edges.push(finaledge);
 		}
