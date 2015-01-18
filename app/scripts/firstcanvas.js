@@ -19,7 +19,8 @@ function createGraphNode(point,i) {
 				content: toAlpha(i),
 				name: 'label'
 			})],
-		idx: i
+		idx: i,
+		edges: []
 	});
 	gn.children['label'].point -= gn.children['label'].bounds.center - point;
 	return gn;
@@ -27,6 +28,7 @@ function createGraphNode(point,i) {
 
 
 var graphNodes = []
+var edges = []
 
 project.currentStyle = {
 	strokeColor: '#000000',
@@ -64,9 +66,46 @@ function onMouseDown(event) {
 	}
 }
 
+var edge = null
+var ngn = null
 function onMouseDrag(event) {
 	if (gn) {
-		gn.position += event.delta;
+		if (event.modifiers.shift) {
+			if (!edge) {
+				console.log(gn.position)
+				edge = new Path.Line({
+					from: gn.position,
+					to: event.point,
+					strokeColor: 'maroon'
+				})
+				edge.sendToBack();
+			} else {
+				edge.segments[1].point = event.point;
+			}
+		} else {
+			gn.position += event.delta;
+			// gn.edges.forEach (edge) {
+				
+			// }
+		}
+	}
+}
+
+function onMouseUp(event){
+	if (edge) {
+		hitresult = project.hitTest(event.point);
+		if(['circle','label'].indexOf(hitresult.item.name) != -1) {
+			ngn = hitresult.item.parent;
+			var finaledge = edge.clone();
+			console.log(finaledge)
+			finaledge.segments[1].point = ngn.position;
+			finaledge.nodes = [gn.idx, ngn.idx];
+			edges.push(finaledge);
+			gn.edges.push(finaledge);
+			ngn.edges.push(finaledge);
+		}
+		edge.remove();
+		edge = null;
 	}
 }
 
