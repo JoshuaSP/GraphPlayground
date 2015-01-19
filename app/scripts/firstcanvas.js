@@ -2,6 +2,8 @@ function toAlpha(num) {
 	return (num >= 26 ? String.fromCharCode(Math.floor(num/26)+64) : "") + String.fromCharCode(num%26 + 65);
 }
 
+settings.hitTolerance = 6
+//
 var radius = 16
 
 function createGraphNode(point,i) {
@@ -44,10 +46,11 @@ function deleteNode (gn) {
 }
 
 
-var gn = selectedNode = null
+var gn = eedge = selectedNode = null
 function onMouseDown(event) {
 	hitresult = project.hitTest(event.point)
-	gn = null
+	gn = null;
+	if (hitresult) {console.log(hitresult.item.name)}
 	if (!hitresult) {
 		var i = 0
 		while (graphNodes[i]) {i++;}
@@ -69,6 +72,11 @@ function onMouseDown(event) {
 			selectedNode = gn.idx;
 			gn.children['circle'].fillColor = 'yellow';
 		}
+	} else if(hitresult.item.name.match(/edge/)) {
+		eedge = hitresult.item;
+		if (event.modifiers.command) {
+			eedge.remove()
+		}
 	}
 }
 
@@ -78,11 +86,11 @@ function onMouseDrag(event) {
 	if (gn) {
 		if (event.modifiers.shift) {
 			if (!edge) {
-				console.log(gn.position)
 				edge = new Path.Line({
 					from: gn.position,
 					to: event.point,
-					strokeColor: 'maroon'
+					strokeColor: 'maroon',
+					name: 'edge'
 				})
 				edge.sendToBack();
 			} else {
