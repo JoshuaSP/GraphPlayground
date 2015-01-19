@@ -24,7 +24,6 @@ function createGraphNode(point,i) {
 				name: 'label'
 			})],
 		data: {
-			idx: i,
 			edges: []
 		}
 	});
@@ -42,16 +41,17 @@ project.currentStyle = {
 };
 
 function deleteNode (gn) {
-	gn.data.edges.forEach (function (edge) {
-		deleteEdge(edge);
-	});
-	graphNodes[gn.data.idx] = null;
+	for (var i = gn.data.edges.length - 1; i > -1;i--){
+		gn.data.edges[i].remove()
+		gn.data.edges[i] = null
+	};
+	graphNodes[graphNodes.indexOf(gn)] = null;
 	gn.remove();
-	}
+}
 
 function deleteEdge (edge) {
 	for (var i = 0; i < 2; i++){
-		graphNodes[edge.data.nodes[i]].data.edges.splice(graphNodes[edge.data.nodes[i]].data.edges.indexOf(edge),1)
+		edge.data.nodes[i].data.edges.splice(edge.data.nodes[i].data.edges.indexOf(edge),1)
 	}
 	edge.remove();
 }
@@ -83,7 +83,7 @@ function onMouseDown(event) {
 					if(graphNodes[selectedNode]) {
 						graphNodes[selectedNode].children['circle'].fillColor = 'salmon';
 					}
-					selectedNode = gn.data.idx;
+					selectedNode = graphNodes.indexOf(gn);
 					gn.children['circle'].fillColor = 'yellow';
 				}
 				break;
@@ -153,7 +153,7 @@ function onMouseDrag(event) {
 		} else {
 			gn.position += event.delta;
 			gn.data.edges.forEach (function (edge) {
-				edge.children[0].segments[edge.data.nodes.indexOf(gn.data.idx)].point += event.delta;
+				edge.children[0].segments[edge.data.nodes.indexOf(gn)].point += event.delta;
 				updateEdgeWeight(edge);
 			});
 		}
@@ -171,10 +171,10 @@ function onMouseUp(event){
 			ngn = hitresult.item.parent;
 			if ([].concat.apply([],gn.data.edges.map(function (edge) {
 						return edge.data.nodes;
-					})).indexOf(ngn.data.idx) < 0) {
+					})).indexOf(ngn) < 0) {
 				var finaledge = edge.clone();
 				finaledge.children[0].segments[1].point = ngn.position;
-				finaledge.data.nodes = [gn.data.idx, ngn.data.idx];
+				finaledge.data.nodes = [gn, ngn];
 				gn.data.edges.push(finaledge);
 				ngn.data.edges.push(finaledge);
 			};
