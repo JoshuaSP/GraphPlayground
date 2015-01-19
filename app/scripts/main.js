@@ -1,5 +1,7 @@
 console.log('\'Allo \'Allo!');
 
-$('.jumbotron').on('click', function() {
-	console.log (graphNodes);
+$('document').ready( function () {
+	$('#dfs').on('click', function() {
+		console.log(paper)
+	});
 })

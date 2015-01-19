@@ -2,6 +2,8 @@ function toAlpha(num) {
 	return (num >= 26 ? String.fromCharCode(Math.floor(num/26)+64) : "") + String.fromCharCode(num%26 + 65);
 }
 
+
+
 settings.hitTolerance = 6
 //
 var radius = 16
@@ -21,14 +23,16 @@ function createGraphNode(point,i) {
 				content: toAlpha(i),
 				name: 'label'
 			})],
-		idx: i,
-		edges: []
+		data: {
+			idx: i,
+			edges: []
+		}
 	});
 	gn.children['label'].point -= gn.children['label'].bounds.center - point;
 	return gn;
 }
 
-
+isWeighted = true
 graphNodes = []
 
 project.currentStyle = {
@@ -38,19 +42,26 @@ project.currentStyle = {
 };
 
 function deleteNode (gn) {
-	graphNodes[gn.idx] = null;
-	gn.remove();
-	gn.edges.forEach (function (edge) {
-		edge.remove();
+	gn.data.edges.forEach (function (edge) {
+		deleteEdge(edge);
 	});
+	graphNodes[gn.data.idx] = null;
+	gn.remove();
+	}
+
+function deleteEdge (edge) {
+	for (var i = 0; i < 2; i++){
+		graphNodes[edge.data.nodes[i]].data.edges.splice(graphNodes[edge.data.nodes[i]].data.edges.indexOf(edge),1)
+	}
+	edge.remove();
 }
 
 
-var gn = eedge = selectedNode = null
+var selector = gn = weight = eedge = selectedNode = modif = null
 function onMouseDown(event) {
 	hitresult = project.hitTest(event.point)
-	gn = null;
-	if (hitresult) {console.log(hitresult.item.name)}
+	modif = event.modifiers.clone()
+	gn = selector = eedge = weight = null;
 	if (!hitresult) {
 		var i = 0
 		while (graphNodes[i]) {i++;}
@@ -61,47 +72,95 @@ function onMouseDown(event) {
 		else {
 			graphNodes.push(gn);
 		}
-	} else if(['circle','label'].indexOf(hitresult.item.name) != -1) {
-		gn = hitresult.item.parent;
-		if (event.modifiers.command) {
-			deleteNode(gn);
-		} else {
-			if(graphNodes[selectedNode]) {
-				graphNodes[selectedNode].children['circle'].fillColor = 'salmon';
-			}
-			selectedNode = gn.idx;
-			gn.children['circle'].fillColor = 'yellow';
-		}
-	} else if(hitresult.item.name.match(/edge/)) {
-		eedge = hitresult.item;
-		if (event.modifiers.command) {
-			eedge.remove()
+	} else {
+		switch (hitresult.item.name.match(/^\w+/)[0]){
+			case 'circle':
+			case 'label':
+				gn = hitresult.item.parent;
+				if (event.modifiers.command) {
+					deleteNode(gn);
+				} else {
+					if(graphNodes[selectedNode]) {
+						graphNodes[selectedNode].children['circle'].fillColor = 'salmon';
+					}
+					selectedNode = gn.data.idx;
+					gn.children['circle'].fillColor = 'yellow';
+				}
+				break;
+			case 'line':
+				eedge = hitresult.item;
+				if (event.modifiers.command) {
+					deleteEdge(eedge.parent)
+				}
+				break;
+			case 'weight':
+				weight = hitresult.item;
+				if (event.modifiers.command) {
+					deleteEdge(weight.parent)
+				}
+				if (event.modifiers.shift) {
+					weight.data.auto = true;
+					weight.strokeColor = 'peru';
+					updateEdgeWeight(weight.parent);
+				}
+				break;
 		}
 	}
 }
+
+
+function updateEdgeWeight(edge){
+	var line = edge.children[0]
+	var weight = edge.children[1]
+	var difVector = line.segments[0].point - line.segments[1].point;
+	weight.position = line.position + difVector.normalize(10).rotate(90);
+	if (weight.data.auto){
+		weight.content = Math.ceil(difVector.length).toString();
+	}
+}
+
 
 var edge = null
 var ngn = null
 function onMouseDrag(event) {
 	if (gn) {
-		if (event.modifiers.shift) {
+		if (modif.shift) {
 			if (!edge) {
-				edge = new Path.Line({
-					from: gn.position,
-					to: event.point,
-					strokeColor: 'maroon',
-					name: 'edge'
-				})
+				edge = new Group({
+					children: [
+						new Path.Line({
+							from: gn.position,
+							to: event.point,
+							strokeColor: 'maroon',
+							name: 'line'
+						}),
+						new PointText({
+							position: gn.position,
+							fontSize: 9,
+							font: 'courier new',
+							name: 'weight',
+							strokeColor: 'peru',
+							data: {auto: true}
+						})
+					],
+					data: {nodes: []}
+				});
 				edge.sendToBack();
 			} else {
-				edge.segments[1].point = event.point;
+				edge.children[0].segments[1].point = event.point;
+				updateEdgeWeight(edge);
 			}
 		} else {
 			gn.position += event.delta;
-			gn.edges.forEach (function (edge) {
-				edge.segments[edge.nodes.indexOf(gn.idx)].point += event.delta;
+			gn.data.edges.forEach (function (edge) {
+				edge.children[0].segments[edge.data.nodes.indexOf(gn.data.idx)].point += event.delta;
+				updateEdgeWeight(edge);
 			});
 		}
+	} else if (weight) {
+		weight.data.auto = false;
+		weight.strokeColor = '#bd1616';
+		weight.content = Math.max((parseInt(weight.content) - event.delta.y),0).toString();
 	}
 }
 
@@ -110,14 +169,14 @@ function onMouseUp(event){
 		hitresult = project.hitTest(event.point);
 		if(['circle','label'].indexOf(hitresult.item.name) != -1) {
 			ngn = hitresult.item.parent;
-			if ([].concat.apply([],gn.edges.map(function (edge) {
-						return edge.segments;
-					})).indexOf(ngn.idx) < 0) {
+			if ([].concat.apply([],gn.data.edges.map(function (edge) {
+						return edge.data.nodes;
+					})).indexOf(ngn.data.idx) < 0) {
 				var finaledge = edge.clone();
-				finaledge.segments[1].point = ngn.position;
-				finaledge.nodes = [gn.idx, ngn.idx];
-				gn.edges.push(finaledge);
-				ngn.edges.push(finaledge);
+				finaledge.children[0].segments[1].point = ngn.position;
+				finaledge.data.nodes = [gn.data.idx, ngn.data.idx];
+				gn.data.edges.push(finaledge);
+				ngn.data.edges.push(finaledge);
 			};
 		}
 		edge.remove();
