@@ -175,6 +175,7 @@ function onMouseUp(event){
 				var finaledge = edge.clone();
 				finaledge.children[0].segments[1].point = ngn.position;
 				finaledge.data.nodes = [gn, ngn];
+				updateEdgeWeight(finaledge);
 				gn.data.edges.push(finaledge);
 				ngn.data.edges.push(finaledge);
 			};
