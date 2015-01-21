@@ -2,12 +2,20 @@ function toAlpha(num) {
 	return (num >= 26 ? String.fromCharCode(Math.floor(num/26)+64) : "") + String.fromCharCode(num%26 + 65);
 }
 
-fuck = function () {
-	var o = new Path.Circle({
-		radius: 50,
-		center: new Point (200,200)
-	})
+globals.checker1 = function () {
+	var check = {
+		circ: new paper.Path.Circle({
+			radius: 15,
+			center: new paper.Point (100,100)
+		}),
+		circ2: new paper.Path.Circle({
+			radius: 20,
+			center: new paper.Point (150,75)
+		})
+	}
 }
+
+globals.scope1 = this
 
 settings.hitTolerance = 6
 //
