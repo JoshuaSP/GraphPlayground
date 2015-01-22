@@ -76,11 +76,11 @@ function otherNode (nodepair, node) {
 
 var canvaswidth = 700;
 var canvasheight = 200;
-var unpoint = new paper.Point (0,0);
+var unpoint = new paper.Point (100,100);
 var radius = 16;
 
 function createTreeNode(node, parent, plotfunction) {
-  var newpos, heightchanged = false
+  var newpos
   var level = parent ? parent.data.level + 1 : 0;
   node.data.level = level;
   paper = pscope2;
@@ -103,18 +103,20 @@ function createTreeNode(node, parent, plotfunction) {
       edges: []
     }
   });
+
   node.data.treenode = tn;
-  if (level > tree.length - 1) {
+  if ( level+1 > tree.length ) {
     tree.push([tn]);
   } else {tree[level].push(tn);}
   // fix the bottom line to be universal... why didn't plotfunction work properly as a callback?
-  console.log(tn.position = plotfunction(level+1, tree[level].length, tree.length, tree[level].length))
-  tn.children['label'].point -= tn.children['label'].bounds.center - tn.position;
+  console.log( tn.position = plotfunction(level+1, tree[level].length, tree.length, tree[level].length))
+  // tn.children['label'].point -= tn.children['label'].bounds.center - tn.position;
+   // debugger;
   tweenArray.push(new TWEEN.Tween(tn).to({opacity: 1}, 500 * spd))
   for (height = 0; height < tree.length; height++) {
     for (pos = 0; pos < tree[height].length; pos++) {
       tn = tree[height][pos]
-      newpos = plotfunction (height+1, pos+1, tree.length, tree[level].length);
+      console.log(newpos = plotfunction (height+1, pos+1, tree.length, tree[level].length));
       if (newpos !== tn.position) {
         tweenArray.push(new TWEEN.Tween(tn.position).to({x: newpos.x, y: newpos.y}, 1000*spd));
         tn.data.edges.forEach ( function (edge) {
@@ -151,7 +153,7 @@ dFsPlot = function (height, pos, treeheight, leveldepth) {  // all 1-indexed
   var x,y;
   if (treeheight <= 5) { x = canvaswidth * ( (height) / 6); }
     else {x = canvaswidth * height / (treeheight + 1);}
-  y = canvasheight * (pos / leveldepth + 1);
+  y = canvasheight * pos / (leveldepth + 1);
   return new paper.Point(x, y);
 }
 
@@ -164,7 +166,7 @@ function animateEdgeExamine(edge) {
     .to(disc_color, 800*spd))
 }
 
-var tree = []
+tree = []
 
 function dFs(node) {
   if(node.data.level == 0) {
