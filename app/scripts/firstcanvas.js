@@ -45,8 +45,8 @@ function createGraphNode(point,i) {
 	return gn;
 }
 
-isWeighted = true
-graphNodes = []
+globals.isWeighted = true
+gobals.graphNodes = []
 
 project.currentStyle = {
 	strokeColor: '#000000',
@@ -59,7 +59,7 @@ function deleteNode (gn) {
 		gn.data.edges[i].remove()
 		gn.data.edges[i] = null
 	};
-	graphNodes[graphNodes.indexOf(gn)] = null;
+	gobals.graphNodes[gobals.graphNodes.indexOf(gn)] = null;
 	gn.remove();
 }
 
@@ -71,20 +71,20 @@ function deleteEdge (edge) {
 }
 
 
-var selector = gn = weight = eedge = selectedNode = modif = null
+var selector = gn = weight = eedge = globals.selectedNode = modif = null
 function onMouseDown(event) {
 	hitresult = project.hitTest(event.point)
 	modif = event.modifiers.clone()
 	gn = selector = eedge = weight = null;
 	if (!hitresult) {
 		var i = 0
-		while (graphNodes[i]) {i++;}
+		while (gobals.graphNodes[i]) {i++;}
 		gn = createGraphNode(event.point,i);
-		if (i < graphNodes.length) {
-			graphNodes[i] = gn;
+		if (i < gobals.graphNodes.length) {
+			gobals.graphNodes[i] = gn;
 		}
 		else {
-			graphNodes.push(gn);
+			gobals.graphNodes.push(gn);
 		}
 	} else {
 		switch (hitresult.item.name.match(/^\w+/)[0]){
@@ -94,10 +94,10 @@ function onMouseDown(event) {
 				if (event.modifiers.command) {
 					deleteNode(gn);
 				} else {
-					if(graphNodes[selectedNode]) {
-						graphNodes[selectedNode].children['circle'].fillColor = 'salmon';
+					if(gobals.graphNodes[globals.selectedNode]) {
+						gobals.graphNodes[globals.selectedNode].children['circle'].fillColor = 'salmon';
 					}
-					selectedNode = graphNodes.indexOf(gn);
+					globals.selectedNode = gobals.graphNodes.indexOf(gn);
 					gn.children['circle'].fillColor = 'yellow';
 				}
 				break;
