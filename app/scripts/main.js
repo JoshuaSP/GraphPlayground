@@ -70,18 +70,16 @@ $('document').ready( function () {
 	setTimeout( function() {
 		pscope1 = paper.PaperScope.get(1);
 		pscope2 = paper.PaperScope.get(2);
-		pscope1.activate()
 		$('#dfs').on('click', function () {
-			var check = {
-				circ: new paper.Path.Circle({
-					radius: 15,
-					center: new paper.Point (100,100)
-				}),
-				circ2: new paper.Path.Circle({
-					radius: 20,
-					center: new paper.Point (150,75)
-				})
-			}
+			paper = pscope1
+			circ = new paper.Path.Circle({
+				radius: 15,
+				center: new paper.Point (100,100)
+			});
+			circ2 = new paper.Path.Circle({
+				radius: 20,
+				center: new paper.Point (150,75)
+			})
 		})
 	}, 2000);
 })

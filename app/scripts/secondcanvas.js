@@ -9,9 +9,9 @@ globals.checker = function () {
 			center: new paper.Point (150,75)
 		})
 	}
-	// tween = new TWEEN.tween(check.circ.position);
-	// tween.to({x: 200}, 2500);
-	// tween.start();
+	tween = new TWEEN.Tween(check.circ.position);
+	tween.to({x: 200}, 2500);
+	tween.start();
 }
 
 
@@ -21,7 +21,7 @@ function toAlpha(num) {
 }
 
 function onFrame(event) {
-	// TWEEN.update();
+	TWEEN.update();
 }
 
 settings.hitTolerance = 6
