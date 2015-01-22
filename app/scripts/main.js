@@ -1,7 +1,7 @@
 console.log('\'Allo \'Allo!');
 
 
-var spd = 1
+var spd = 3
 paper.install(window)
 // var scope = new paper.PaperScope()
 
@@ -33,7 +33,8 @@ function runSearch(search, node) {
   tree = [];
   node.data.level = 0;
   search(node);
-  nextTweenArray();
+  debugger;
+  playTweenArray(0);
 }
 
 deleteNode = function (){
@@ -43,8 +44,9 @@ deleteNode = function (){
 function addTweenArray (tweenArray) {
   var tweenStack = {
     tweenArray: tweenArray,
-    id: tweenList.length + 1,
-    completed: 0
+    id: tweenList.length,
+    completed: 0,
+    fired: false
   }
   tweenStack.tweenArray.forEach( function (tween) {
     tween.onComplete(function () {
@@ -57,15 +59,25 @@ function addTweenArray (tweenArray) {
 
 function completeTween (tweenStack) {
   // console.log(TWEEN.getAll())
+  // debugger;
+
+  console.log(tweenStack)
   tweenStack.completed++
-  if (tweenStack.completed >= tweenStack.tweenArray.length - 1 && tweenList.length > 0) {
-    nextTweenArray();
+  if (tweenStack.completed >= tweenStack.tweenArray.length && !tweenStack.fired && tweenList.length > 0) {
+    playTweenArray(tweenStack.id + 1);
+    tweenStack.fired = true;
   }
 }
 
-function nextTweenArray () {
-  var tweenStack = tweenList.shift();
-  tweenStack.tweenArray.forEach (function (tween) {
+// function nextTweenArray () {
+//   var tweenStack = tweenList.shift();
+//   tweenStack.tweenArray.forEach (function (tween) {
+//     tween.start();
+//   })
+// }
+
+playTweenArray = function (id) {
+  tweenList[id].tweenArray.forEach (function (tween) {
     tween.start();
   })
 }
@@ -75,7 +87,7 @@ function otherNode (nodepair, node) {
 }
 
 var canvaswidth = 700;
-var canvasheight = 200;
+var canvasheight = 225;
 var unpoint = new paper.Point (100,100);
 var radius = 16;
 
@@ -92,6 +104,8 @@ function createTreeNode(node, parent, plotfunction) {
         center: unpoint,
         radius: radius,
         fillColor: 'salmon',
+        strokeWidth: 1.6,
+        strokeColor: 'black',
         name: 'circle'
       }),
       new PointText({
@@ -108,24 +122,36 @@ function createTreeNode(node, parent, plotfunction) {
   if ( level+1 > tree.length ) {
     tree.push([tn]);
   } else {tree[level].push(tn);}
-  // fix the bottom line to be universal... why didn't plotfunction work properly as a callback?
   console.log( tn.position = plotfunction(level+1, tree[level].length, tree.length, tree[level].length))
-  // tn.children['label'].point -= tn.children['label'].bounds.center - tn.position;
+  tn.children['label'].point.x -= tn.children['label'].bounds.center.x - tn.position.x;
+  tn.children['label'].point.y -= tn.children['label'].bounds.center.y - tn.position.y;
    // debugger;
   tweenArray.push(new TWEEN.Tween(tn).to({opacity: 1}, 500 * spd))
+  var tweenArray2 = []
   for (height = 0; height < tree.length; height++) {
     for (pos = 0; pos < tree[height].length; pos++) {
       tn = tree[height][pos]
-      console.log(newpos = plotfunction (height+1, pos+1, tree.length, tree[level].length));
+      newpos = plotfunction (height+1, pos+1, tree.length, tree[height].length);
       if (newpos !== tn.position) {
-        tweenArray.push(new TWEEN.Tween(tn.position).to({x: newpos.x, y: newpos.y}, 1000*spd));
+        tweenArray2.push(new TWEEN.Tween(tn.position).to({x: newpos.x, y: newpos.y}, 1000*spd));
         tn.data.edges.forEach ( function (edge) {
-          tweenArray.push(new TWEEN.Tween(edge.segments[edge.data.nodes.indexOf(tn)].point)
+          tweenArray2.push(new TWEEN.Tween(edge.segments[edge.data.nodes.indexOf(tn)].point)
             .to({x: newpos.x, y: newpos.y}, 1000*spd));
         })
       }
     }
   }
+  addTweenArray(tweenArray2)
+  addTweenArray(tweenArray)
+}
+
+
+dFsPlot = function (height, pos, treeheight, leveldepth) {  // all 1-indexed
+  var x,y;
+  if (treeheight <= 5) { x = canvaswidth * ( (height) / 6); }
+    else {x = canvaswidth * height / (treeheight + 1);}
+  y = canvasheight * pos / (leveldepth + 1);
+  return new paper.Point(x, y);
 }
 
 createTreeEdge = function (node, parent) {
@@ -142,20 +168,13 @@ createTreeEdge = function (node, parent) {
       nodes: [tn, ptn]
     }
   });
+  edge.sendToBack();
   [tn, ptn].forEach ( function (thistn) {
     thistn.data.edges.push(edge);
   })
   tweenArray.push(new TWEEN.Tween(edge).to({opacity: 1}, spd*500));
 }
 
-
-dFsPlot = function (height, pos, treeheight, leveldepth) {  // all 1-indexed
-  var x,y;
-  if (treeheight <= 5) { x = canvaswidth * ( (height) / 6); }
-    else {x = canvaswidth * height / (treeheight + 1);}
-  y = canvasheight * pos / (leveldepth + 1);
-  return new paper.Point(x, y);
-}
 
 
 function animateEdgeExamine(edge) {
@@ -172,6 +191,7 @@ function dFs(node) {
   if(node.data.level == 0) {
     tweenArray = []
     createTreeNode(node, null, dFsPlot);
+    node.data.status = 'discovered'
     addTweenArray(tweenArray);
   }
   node.data.edges.forEach(function (edge) {
@@ -204,4 +224,5 @@ $('document').ready( function () {
       runSearch (dFs, globals.graphNodes[globals.selectedNode])
     })
   }, 2000);
+  $
 })
