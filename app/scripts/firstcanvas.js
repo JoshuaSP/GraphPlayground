@@ -1,18 +1,11 @@
+globals = {}
+
 function toAlpha(num) {
 	return (num >= 26 ? String.fromCharCode(Math.floor(num/26)+64) : "") + String.fromCharCode(num%26 + 65);
 }
 
-globals.checker1 = function () {
-	var check = {
-		circ: new paper.Path.Circle({
-			radius: 15,
-			center: new paper.Point (100,100)
-		}),
-		circ2: new paper.Path.Circle({
-			radius: 20,
-			center: new paper.Point (150,75)
-		})
-	}
+function onFrame(event) {
+	TWEEN.update();
 }
 
 globals.scope1 = this
@@ -46,7 +39,7 @@ function createGraphNode(point,i) {
 }
 
 globals.isWeighted = true
-gobals.graphNodes = []
+globals.graphNodes = []
 
 project.currentStyle = {
 	strokeColor: '#000000',
@@ -59,7 +52,7 @@ function deleteNode (gn) {
 		gn.data.edges[i].remove()
 		gn.data.edges[i] = null
 	};
-	gobals.graphNodes[gobals.graphNodes.indexOf(gn)] = null;
+	globals.graphNodes[globals.graphNodes.indexOf(gn)] = null;
 	gn.remove();
 }
 
@@ -78,13 +71,13 @@ function onMouseDown(event) {
 	gn = selector = eedge = weight = null;
 	if (!hitresult) {
 		var i = 0
-		while (gobals.graphNodes[i]) {i++;}
+		while (globals.graphNodes[i]) {i++;}
 		gn = createGraphNode(event.point,i);
-		if (i < gobals.graphNodes.length) {
-			gobals.graphNodes[i] = gn;
+		if (i < globals.graphNodes.length) {
+			globals.graphNodes[i] = gn;
 		}
 		else {
-			gobals.graphNodes.push(gn);
+			globals.graphNodes.push(gn);
 		}
 	} else {
 		switch (hitresult.item.name.match(/^\w+/)[0]){
@@ -94,10 +87,10 @@ function onMouseDown(event) {
 				if (event.modifiers.command) {
 					deleteNode(gn);
 				} else {
-					if(gobals.graphNodes[globals.selectedNode]) {
-						gobals.graphNodes[globals.selectedNode].children['circle'].fillColor = 'salmon';
+					if(globals.graphNodes[globals.selectedNode]) {
+						globals.graphNodes[globals.selectedNode].children['circle'].fillColor = 'salmon';
 					}
-					globals.selectedNode = gobals.graphNodes.indexOf(gn);
+					globals.selectedNode = globals.graphNodes.indexOf(gn);
 					gn.children['circle'].fillColor = 'yellow';
 				}
 				break;

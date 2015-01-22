@@ -1,3 +1,5 @@
+globals = globals || {}
+
 globals.checker = function () {
 	var check = {
 		circ: new paper.Path.Circle({
@@ -20,9 +22,9 @@ function toAlpha(num) {
 	return (num >= 26 ? String.fromCharCode(Math.floor(num/26)+64) : "") + String.fromCharCode(num%26 + 65);
 }
 
-function onFrame(event) {
-	TWEEN.update();
-}
+// function onFrame(event) {
+// 	TWEEN.update();
+// }
 
 settings.hitTolerance = 6
 //

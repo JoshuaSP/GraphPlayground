@@ -271,7 +271,6 @@ TWEEN.Tween = function ( object ) {
 	};
 
 	this.update = function ( time ) {
-
 		var property;
 
 		if ( time < _startTime ) {
@@ -293,6 +292,8 @@ TWEEN.Tween = function ( object ) {
 		}
 
 		var elapsed = ( time - _startTime ) / _duration;
+		// I'm adding this next line, too:
+		if (!_startTime) {elapsed = 0};
 		elapsed = elapsed > 1 ? 1 : elapsed;
 
 		var value = _easingFunction( elapsed );
@@ -363,7 +364,8 @@ TWEEN.Tween = function ( object ) {
 
 			} else {
 
-				if ( _onCompleteCallback !== null ) {
+				if ( _onCompleteCallback ) {
+				// if ( _onCompleteCallback !== null ) {
 
 					_onCompleteCallback.call( _object );
 
