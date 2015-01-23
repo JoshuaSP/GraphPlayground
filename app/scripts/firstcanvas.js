@@ -27,6 +27,7 @@ function createGraphNode(point,i) {
 			new PointText({
 				position: point,
 				content: toAlpha(i),
+				strokeWidth: 1.1,
 				name: 'label'
 			})],
 		data: {
@@ -66,6 +67,12 @@ function deleteEdge (edge) {
 
 var selector = gn = weight = eedge = globals.selectedNode = modif = null
 function onMouseDown(event) {
+	if (globals.searched) {
+		TWEEN.removeAll();
+		restoreAllNodes();
+		globals.searched = false;
+		return;
+	}
 	hitresult = project.hitTest(event.point)
 	modif = event.modifiers.clone()
 	gn = selector = eedge = weight = null;
@@ -178,7 +185,7 @@ function onMouseUp(event){
 			ngn = hitresult.item.parent;
 			if ([].concat.apply([],gn.data.edges.map(function (edge) {
 						return edge.data.nodes;
-					})).indexOf(ngn) < 0) {
+					})).indexOf(ngn) < 0 && ngn !== gn) {
 				var finaledge = edge.clone();
 				finaledge.children[0].segments[1].point = ngn.position;
 				finaledge.data.nodes = [gn, ngn];

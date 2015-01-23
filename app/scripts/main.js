@@ -1,5 +1,7 @@
 console.log('\'Allo \'Allo!');
 
+var globals = globals || {}
+
 
 var spd = 1
 paper.install(window)
@@ -17,13 +19,22 @@ var proc_color = {hue: 181, saturation: 1.0, brightness: 0.82}
 var disc_color = {hue: 51, saturation: 1.0, brightness: 1.0}
 
 var tweenList
-searched = false
+globals.searched = false
 
 function runSearch(search, plot, node) {
   if (!node) return;
-  if (searched) {globals.graphNodes.forEach( function (gn) {
-    restoreNode(gn);
-  })}
+  if (globals.searched) {globals.restoreAllNodes()}
+  alledges.forEach(function (edge) {
+    edge.remove();
+  })
+  if (tree.length > 0) {
+    tree.reduce(function (a,b){return a.concat(b);}).forEach(function (treenode) {
+      if (treenode) {treenode.remove()};
+    })
+  }
+  tree = [];
+  alledges = [];
+  globals.searched = true;
   tree.forEach( function (level) {
     level.forEach ( function (pos) {
       deleteNode(tree[level][pos]);
@@ -37,15 +48,33 @@ function runSearch(search, plot, node) {
   playTweenArray(0);
 }
 
+restoreAllNodes = function () {
+  globals.graphNodes.forEach(function (node) {
+    node.children['circle'].fillColor = 'salmon';
+    node.data.edges.forEach( function(edge) {
+      edge.children['line'].strokeColor = 'maroon';
+      edge.children['line'].strokeWidth = 1.6;
+      edge.data.examined = false;
+    })
+    node.data = {status: null,
+      edges: node.data.edges}
+  })
+}
+
+
 function sub (a,b) {
   return new paper.Point(a.x - b.x, a.y - b.y)
+}
+
+function add (a,b) {
+  return new paper.Point(a.x + b.x, a.y + b.y)
 }
 
 fixpositions = function (plot) {
   var edgeVector,otherEdgeVector
   var collision = true;
   var i = 0;
-  while (collision && i < 8) {
+  while (collision && i < 35) {
     collision = false;
     i++
     console.log(tree);
@@ -84,17 +113,28 @@ fixpositions = function (plot) {
                       tree[height+1].push(tn)
                     }
                   } else {
-                    tree[height].splice(pos,0,null)
+                    if (Math.random() > 0.5) {
+                      tree[height].splice(pos,0,null);
+                    }
+                    else {
+                      tree[height].splice(pos+1,0,null);
+                    }
                   }
                   break colloop;
                 }
               }
             } 
           }
+
         }
       }
     }
   }
+  alledges.forEach(function(edge) {
+    edgeVector = sub(edge.segments[1].point, edge.segments[0].point)
+    edge.segments[0].point = add(edge.segments[0].point, edgeVector.normalize(radius))
+    edge.segments[1].point = sub(edge.segments[1].point, edgeVector.normalize(radius))
+  })
 }
 
 

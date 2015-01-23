@@ -364,8 +364,8 @@ TWEEN.Tween = function ( object ) {
 
 			} else {
 
-				if ( _onCompleteCallback ) {
-				// if ( _onCompleteCallback !== null ) {
+				// if ( _onCompleteCallback ) {
+				if ( _onCompleteCallback !== null ) {
 
 					_onCompleteCallback.call( _object );
 
