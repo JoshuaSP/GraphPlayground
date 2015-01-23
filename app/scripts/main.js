@@ -16,7 +16,8 @@ paper.install(window)
 // scope.setup(canvas2);
 
 var proc_color = {hue: 181, saturation: 1.0, brightness: 0.82}
-var disc_color = {hue: 51, saturation: 1.0, brightness: 1.0}
+var node_disc_color = {hue: 151, saturation: 1.0, brightness: 0.82}
+var disc_color = {hue: 274, saturation: 0.55, brightness: 0.95}
 
 var tweenList
 globals.searched = false
@@ -266,7 +267,7 @@ createTreeEdge = function (node, parent, newnode) {
     thistn.data.edges.push(edge);
   })
   alledges.push(edge)
-  tweenArray.push(new TWEEN.Tween(edge).to({opacity: 1}, spd*500));
+  tweenArray.push(new TWEEN.Tween(edge).to({opacity: 1}, spd*300));
 }
 
 alledges = []
@@ -275,7 +276,7 @@ alledges = []
 function animateEdgeExamine(edge) {
   edge.data.examined = true;
   tweenArray.push(new TWEEN.Tween(edge.children['line'])
-    .to({strokeWidth: 15}, 800*spd))
+    .to({strokeWidth: 7}, 800*spd))
   tweenArray.push(new TWEEN.Tween(edge.children['line'].strokeColor)
     .to(disc_color, 800*spd))
 }
@@ -285,6 +286,7 @@ tree = []
 function dFs(node) {
   if(node.data.level == 0 && node.data.status != 'discovered') {
     tweenArray = []
+    colorflip(node, node_disc_color)
     createTreeNode(node, null, dFsPlot);
     node.data.status = 'discovered'
     addTweenArray(tweenArray);
@@ -298,18 +300,33 @@ function dFs(node) {
       if (foundNode.data.status !== 'discovered'){
         newnode = true
         createTreeNode(foundNode, node, dFsPlot);
+        colorflip(foundNode, node_disc_color)
         foundNode.data.status = 'discovered'
       }
       createTreeEdge(foundNode, node, newnode);
       edge.data.examined = true;
       if (tweenArray.length > 0) addTweenArray(tweenArray);
-      dFs(foundNode);
+      if (newnode) {dFs(foundNode);}
     }
   })
-  tweenArray = [new TWEEN.Tween(node.children['circle'].fillColor).to(proc_color, 400*spd)];
+  tweenArray = []
+  // tweenArray = [new TWEEN.Tween(node.children['circle'].fillColor).to(proc_color, 400*spd)];
+  colorflip(node, proc_color)
+  var i = 0
+  tweenArray.push(new TWEEN.Tween(i).to(1, 350*spd))
   addTweenArray(tweenArray);
 }
 
+colorflip = function (node, color) {
+  tweenArray.push (new TWEEN.Tween(node.children['circle'].fillColor).to({brightness: 0},150*spd)
+    .chain(new TWEEN.Tween(node.children['circle'].fillColor).to({brightness: color.brightness},150*spd)
+      .onStart(function () {
+        node.children['circle'].fillColor.hue = color.hue
+        node.children['circle'].fillColor.saturation = color.saturation
+      })
+    )
+  )
+}
 
 
 
