@@ -15,14 +15,14 @@ paper.install(window)
 // var view_2 = scope.View._viewsById['canvas2'];
 // scope.setup(canvas2);
 
-var proc_color = {hue: 181, saturation: 1.0, brightness: 0.82}
-var node_disc_color = {hue: 151, saturation: 1.0, brightness: 0.82}
-var disc_color = {hue: 274, saturation: 0.55, brightness: 0.95}
+var proc_color = {red: 0.639, green: 0.992, blue: 1}
+var node_disc_color = {red: 0.639, green: 1, blue: 0.827}
+var disc_color = {red: 0.725, green: 0.427, blue: 0.949}
 
 var tweenList
 globals.searched = false
 
-function runSearch(search, plot, node) {
+function runSearch(search, node, plot) {
   if (!node) return;
   if (globals.searched) {restoreAllNodes()}
   alledges.forEach(function (edge) {
@@ -36,11 +36,6 @@ function runSearch(search, plot, node) {
   tree = [];
   alledges = [];
   globals.searched = true;
-  tree.forEach( function (level) {
-    level.forEach ( function (pos) {
-      deleteNode(tree[level][pos]);
-    })
-  })
   tweenList = [];
   tree = [];
   node.data.level = 0;
@@ -103,7 +98,6 @@ fixpositions = function (plot) {
               otherEdge = othertn.data.edges[otheredgeindex]
               if (otherEdge !== edge) {
                 otherEdgeVector = sub(otherEdge.segments[1].point, otherEdge.segments[0].point)
-                console.log(edgeVector, otherEdgeVector)
                 if (edgeVector.isColinear(otherEdgeVector)) {
                   collision = true;
                   if (tree[height].indexOf(othertn) > -1) {
@@ -136,11 +130,6 @@ fixpositions = function (plot) {
     edge.segments[0].point = add(edge.segments[0].point, edgeVector.normalize(radius))
     edge.segments[1].point = sub(edge.segments[1].point, edgeVector.normalize(radius))
   })
-}
-
-
-deleteNode = function (){
-
 }
 
 function addTweenArray (tweenArray) {
@@ -184,7 +173,7 @@ var canvasheight = 225;
 var unpoint = new paper.Point (100,100);
 var radius = 16;
 
-function createTreeNode(node, parent, plotfunction) {
+function createTreeNode(node, parent) {
   var newpos
   var level = parent ? parent.data.level + 1 : 0;
   node.data.level = level;
@@ -215,26 +204,9 @@ function createTreeNode(node, parent, plotfunction) {
   if ( level+1 > tree.length ) {
     tree.push([tn]);
   } else {tree[level].push(tn);}
-  console.log( tn.position = plotfunction(level+1, tree[level].length, tree.length, tree[level].length))
   tn.children['label'].point.x -= tn.children['label'].bounds.center.x - tn.position.x;
   tn.children['label'].point.y -= tn.children['label'].bounds.center.y - tn.position.y;
-   // debugger;
   tweenArray.push(new TWEEN.Tween(tn).to({opacity: 1}, 500 * spd))
-  // var tweenArray2 = []
-  // for (height = 0; height < tree.length; height++) {
-  //   for (pos = 0; pos < tree[height].length; pos++) {
-  //     tn = tree[height][pos]
-  //     newpos = plotfunction (height+1, pos+1, tree.length, tree[height].length);
-  //     if (newpos !== tn.position) {
-  //       tweenArray2.push(new TWEEN.Tween(tn.position).to({x: newpos.x, y: newpos.y}, 1000*spd));
-  //       tn.data.edges.forEach ( function (edge) {
-  //         tweenArray2.push(new TWEEN.Tween(edge.segments[edge.data.nodes.indexOf(tn)].point)
-  //           .to({x: newpos.x, y: newpos.y}, 1000*spd));
-  //       })
-  //     }
-  //   }
-  // }
-  // addTweenArray(tweenArray2)
   addTweenArray(tweenArray)
 }
 
@@ -276,7 +248,7 @@ alledges = []
 function animateEdgeExamine(edge) {
   edge.data.examined = true;
   tweenArray.push(new TWEEN.Tween(edge.children['line'])
-    .to({strokeWidth: 7}, 800*spd))
+    .to({strokeWidth: 6}, 800*spd))
   tweenArray.push(new TWEEN.Tween(edge.children['line'].strokeColor)
     .to(disc_color, 800*spd))
 }
@@ -287,7 +259,7 @@ function dFs(node) {
   if(node.data.level == 0 && node.data.status != 'discovered') {
     tweenArray = []
     colorflip(node, node_disc_color)
-    createTreeNode(node, null, dFsPlot);
+    createTreeNode(node, null);
     node.data.status = 'discovered'
     addTweenArray(tweenArray);
   }
@@ -299,7 +271,7 @@ function dFs(node) {
       foundNode = otherNode(edge.data.nodes, node)
       if (foundNode.data.status !== 'discovered'){
         newnode = true
-        createTreeNode(foundNode, node, dFsPlot);
+        createTreeNode(foundNode, node);
         colorflip(foundNode, node_disc_color)
         foundNode.data.status = 'discovered'
       }
@@ -316,6 +288,74 @@ function dFs(node) {
   tweenArray.push(new TWEEN.Tween(i).to(1, 350*spd))
   addTweenArray(tweenArray);
 }
+
+function bFs(node) {
+  var bFsQ = [];
+  tweenArray = []
+  colorflip(node, node_disc_color)
+  createTreeNode(node, null);
+  addTweenArray(tweenArray);
+  while (true) {
+    node.data.edges.forEach(function (edge) {
+      var newnode = false
+      tweenArray = []
+      if (!edge.data.examined) {
+        animateEdgeExamine(edge)
+        foundNode = otherNode(edge.data.nodes, node)
+        if (foundNode.data.status == null){
+          newnode = true
+          createTreeNode(foundNode, node);
+          colorflip(foundNode, node_disc_color)
+          foundNode.data.status = 'discovered'
+          bFsQ.push(foundNode)
+        }
+        createTreeEdge(foundNode, node, newnode);
+        edge.data.examined = true;
+        if (tweenArray.length > 0) addTweenArray(tweenArray);
+      }
+    })
+    tweenArray = [];
+    colorflip(node, proc_color);
+    foundNode.status = 'processed'
+    var i = 0;
+    tweenArray.push(new TWEEN.Tween(i).to(1, 350*spd));
+    addTweenArray(tweenArray);
+    if (bFsQ.length == 0) {
+      break;
+    } else {
+      node = bFsQ.shift();
+    }
+  }
+}
+
+
+function pim (node) {
+  if(node.data.level == 0 && node.data.status !== 'visited') {
+    tweenArray = []
+    colorflip(node, node_disc_color)
+    createTreeNode(node, null);
+    node.data.status = 'visited'
+    addTweenArray(tweenArray);
+  }
+  while (true) { 
+    var newedge = _.sortBy( node.data.edges.filter ( function (edge) {
+      return otherNode(edge.data.nodes, node).data.status !== 'visited';
+    }), function (edge) {
+      return parseInt(edge.children[1].content);
+    })[0]
+    if (!newedge) {return;}
+    tweenArray = [];
+    animateEdgeExamine(newedge);
+    var foundNode = otherNode(newedge.data.nodes, node);
+    foundNode.data.status = 'visited'
+    createTreeNode(foundNode, node);
+    createTreeEdge(foundNode, node, true);
+    colorflip(foundNode, node_disc_color);
+    addTweenArray(tweenArray);
+    pim(foundNode);
+  }
+}
+
 
 colorflip = function (node, color) {
   tweenArray.push (new TWEEN.Tween(node.children['circle'].fillColor).to({brightness: 0},150*spd)
@@ -351,7 +391,13 @@ $('document').ready( function () {
 
   setTimeout( function() {
     $('#dfs').on('click', function () {
-      runSearch (dFs, dFsPlot, globals.graphNodes[globals.selectedNode])
+      runSearch (dFs, globals.graphNodes[globals.selectedNode], dFsPlot)
+    })
+    $('#pim').on('click', function () {
+      runSearch (pim, globals.graphNodes[globals.selectedNode], dFsPlot)
+    })
+    $('#bfs').on('click', function () {
+      runSearch (bFs, globals.graphNodes[globals.selectedNode], dFsPlot)
     })
   }, 2000);
   $

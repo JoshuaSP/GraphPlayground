@@ -154,6 +154,7 @@ function onMouseDrag(event) {
 							font: 'courier new',
 							name: 'weight',
 							strokeColor: 'peru',
+							strokeWidth: 1,
 							data: {auto: true}
 						})
 					],
