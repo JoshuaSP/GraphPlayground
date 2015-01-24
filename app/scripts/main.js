@@ -15,8 +15,8 @@ paper.install(window)
 // var view_2 = scope.View._viewsById['canvas2'];
 // scope.setup(canvas2);
 
-var proc_color = {red: 0.639, green: 0.992, blue: 1}
-var node_disc_color = {red: 0.639, green: 1, blue: 0.827}
+var proc_color = {red: 0, green: 0.808, blue: 0.82}
+var node_disc_color = {red: 0, green: 0.82, blue: 0.424}
 var disc_color = {red: 0.725, green: 0.427, blue: 0.949}
 
 var tweenList
@@ -46,14 +46,16 @@ function runSearch(search, node, plot) {
 
 restoreAllNodes = function () {
   globals.graphNodes.forEach(function (node) {
-    node.children['circle'].fillColor = 'salmon';
-    node.data.edges.forEach( function(edge) {
-      edge.children['line'].strokeColor = 'maroon';
-      edge.children['line'].strokeWidth = 1.6;
-      edge.data.examined = false;
-    })
-    node.data = {status: null,
-      edges: node.data.edges}
+    if (node) {
+      node.children['circle'].fillColor = 'salmon';
+      node.data.edges.forEach( function(edge) {
+        edge.children['line'].strokeColor = 'maroon';
+        edge.children['line'].strokeWidth = 1.6;
+        edge.data.examined = false;
+      })
+      node.data = {status: null,
+        edges: node.data.edges}
+    }
   })
 }
 
@@ -64,6 +66,10 @@ function sub (a,b) {
 
 function add (a,b) {
   return new paper.Point(a.x + b.x, a.y + b.y)
+}
+
+function scalartimes (a,b) {
+  return new paper.Point(a.x * b, a.y * b)
 }
 
 fixpositions = function (plot) {
@@ -79,6 +85,7 @@ fixpositions = function (plot) {
         tn = tree[height][pos]
         if (tn){
           tn.position = plot (height+1, pos+1, tree.length, tree[height].length);
+          tn.position.x += tn.data.poschange;
           for (var edgeindex = 0; edgeindex<tn.data.edges.length; edgeindex++) {
             edge = tn.data.edges[edgeindex]
             edge.segments[edge.data.nodes.indexOf(tn)].point = tn.position;
@@ -99,15 +106,11 @@ fixpositions = function (plot) {
               if (otherEdge !== edge) {
                 otherEdgeVector = sub(otherEdge.segments[1].point, otherEdge.segments[0].point)
                 if (edgeVector.isColinear(otherEdgeVector)) {
-                  collision = true;
                   if (tree[height].indexOf(othertn) > -1) {
-                    tree[height].splice(pos,1);
-                    if (height = tree.length) {
-                      tree.push([tn])
-                    } else {
-                      tree[height+1].push(tn)
-                    }
+                    collision = true;
+                    tn.data.poschange += Math.floor(Math.random()*2) * radius * 4 - radius * 2;
                   } else {
+                    collision = true;
                     if (Math.random() > 0.5) {
                       tree[height].splice(pos,0,null);
                     }
@@ -196,7 +199,8 @@ function createTreeNode(node, parent) {
         name: 'label'
       })],
     data: {
-      edges: []
+      edges: [],
+      poschange: 0
     }
   });
 
@@ -358,14 +362,7 @@ function pim (node) {
 
 
 colorflip = function (node, color) {
-  tweenArray.push (new TWEEN.Tween(node.children['circle'].fillColor).to({brightness: 0},150*spd)
-    .chain(new TWEEN.Tween(node.children['circle'].fillColor).to({brightness: color.brightness},150*spd)
-      .onStart(function () {
-        node.children['circle'].fillColor.hue = color.hue
-        node.children['circle'].fillColor.saturation = color.saturation
-      })
-    )
-  )
+  tweenArray.push (new TWEEN.Tween(node.children['circle'].fillColor).to(color, spd*150))
 }
 
 
