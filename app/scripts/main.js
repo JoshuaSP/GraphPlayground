@@ -1,7 +1,7 @@
 console.log('\'Allo \'Allo!');
 
 var globals = globals || {}
-
+var speednow;
 
 var spd = 1
 paper.install(window)
@@ -24,7 +24,7 @@ globals.searched = false
 
 function runSearch(search, plot, node) {
   if (!node) return;
-  if (globals.searched) {globals.restoreAllNodes()}
+  if (globals.searched) {restoreAllNodes()}
   alledges.forEach(function (edge) {
     edge.remove();
   })
@@ -267,7 +267,7 @@ createTreeEdge = function (node, parent, newnode) {
     thistn.data.edges.push(edge);
   })
   alledges.push(edge)
-  tweenArray.push(new TWEEN.Tween(edge).to({opacity: 1}, spd*300));
+  tweenArray.push(new TWEEN.Tween(edge).to({opacity: 1}, spd*150));
 }
 
 alledges = []
@@ -332,6 +332,23 @@ colorflip = function (node, color) {
 
 $('document').ready( function () {
   // console.log(checker)
+  var speedSlider = $('input.slider').slider({
+    orientation: 'vertical',
+    min: 1,
+    max: 5,
+    step: 0.1,
+    reversed: true
+  })
+  speedSlider.css('visibility', 'visible')
+  // speedSlider.on("slide", function (slideEvt) {
+  //   spd = Math.pow(5, (-slideEvt.value - 1)/2 + 2);
+  // })
+  // 1 -> 1/3, 5 -> 3, 3->1
+  // 5 -> -1, 3->0, 1->1
+  speedSlider.on("slide", function (slideEvt) {
+    TWEEN.speed(slideEvt.value);
+  })
+
   setTimeout( function() {
     $('#dfs').on('click', function () {
       runSearch (dFs, dFsPlot, globals.graphNodes[globals.selectedNode])
