@@ -53,8 +53,11 @@ restoreAllNodes = function () {
         edge.children['line'].strokeWidth = 1.6;
         edge.data.examined = false;
       })
-      node.data = {status: null,
-        edges: node.data.edges}
+      node.data = {
+        status: null,
+        edges: node.data.edges,
+        dist: Infinity
+      }
     }
   })
 }
@@ -108,7 +111,7 @@ fixpositions = function (plot) {
                 if (edgeVector.isColinear(otherEdgeVector)) {
                   if (tree[height].indexOf(othertn) > -1) {
                     collision = true;
-                    tn.data.poschange += Math.floor(Math.random()*2) * radius * 4 - radius * 2;
+                    tn.data.poschange += Math.floor(Math.random()*2) * radius * 5 - radius * 2.5;
                   } else {
                     collision = true;
                     if (Math.random() > 0.5) {
@@ -333,30 +336,39 @@ function bFs(node) {
 }
 
 
-function pim (node) {
-  if(node.data.level == 0 && node.data.status !== 'visited') {
+function prim (node) {
+  node.data.parent = null;
+  while (true) {
     tweenArray = []
-    colorflip(node, node_disc_color)
-    createTreeNode(node, null);
-    node.data.status = 'visited'
-    addTweenArray(tweenArray);
-  }
-  while (true) { 
-    var newedge = _.sortBy( node.data.edges.filter ( function (edge) {
-      return otherNode(edge.data.nodes, node).data.status !== 'visited';
-    }), function (edge) {
-      return parseInt(edge.children[1].content);
-    })[0]
-    if (!newedge) {return;}
-    tweenArray = [];
-    animateEdgeExamine(newedge);
-    var foundNode = otherNode(newedge.data.nodes, node);
-    foundNode.data.status = 'visited'
-    createTreeNode(foundNode, node);
-    createTreeEdge(foundNode, node, true);
-    colorflip(foundNode, node_disc_color);
-    addTweenArray(tweenArray);
-    pim(foundNode);
+    node.data.status = 'intree'
+    colorflip(node, proc_color)
+    createTreeNode(node, node.data.parent)
+    if (node.data.parent) {createTreeEdge(node, node.data.parent, true);}
+    addTweenArray(tweenArray)
+    node.data.edges.forEach(function (edge) {
+      foundNode = otherNode(edge.data.nodes, node)
+      if (!edge.data.examined && foundNode.data.status != 'intree') {
+        tweenArray = []
+        animateEdgeExamine(edge)
+        colorflip(foundNode, node_disc_color)
+        addTweenArray(tweenArray)
+        foundNode.data.status = 'examined'
+        if (parseInt(edge.children[1].content) < foundNode.data.dist) {
+          foundNode.data.dist = parseInt(edge.children[1].content)
+          foundNode.data.parent = node
+        }
+      }
+    })
+    var mapped = globals.graphNodes.map ( function (gn){
+      if (!gn || gn.data.status == 'intree') {
+        return Infinity;
+      } else {
+        return gn.data.dist;
+      }
+    })
+    var mindist = Math.min.apply(Math, mapped);
+    if (mindist == Infinity) {return;}
+    node = globals.graphNodes[mapped.indexOf(mindist)];
   }
 }
 
@@ -390,8 +402,8 @@ $('document').ready( function () {
     $('#dfs').on('click', function () {
       runSearch (dFs, globals.graphNodes[globals.selectedNode], dFsPlot)
     })
-    $('#pim').on('click', function () {
-      runSearch (pim, globals.graphNodes[globals.selectedNode], dFsPlot)
+    $('#prim').on('click', function () {
+      runSearch (prim, globals.graphNodes[globals.selectedNode], dFsPlot)
     })
     $('#bfs').on('click', function () {
       runSearch (bFs, globals.graphNodes[globals.selectedNode], dFsPlot)

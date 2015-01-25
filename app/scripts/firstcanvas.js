@@ -32,7 +32,8 @@ function createGraphNode(point,i) {
 			})],
 		data: {
 			edges: [],
-			status: null
+			status: null,
+			dist: Infinity
 		}
 	});
 	gn.children['label'].point -= gn.children['label'].bounds.center - point;
