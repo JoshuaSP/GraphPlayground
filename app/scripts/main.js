@@ -126,7 +126,6 @@ fixpositions = function (plot) {
               }
             } 
           }
-
         }
       }
     }
@@ -247,6 +246,7 @@ createTreeEdge = function (node, parent, newnode) {
   })
   alledges.push(edge)
   tweenArray.push(new TWEEN.Tween(edge).to({opacity: 1}, spd*150));
+  return edge;
 }
 
 alledges = []
@@ -377,6 +377,222 @@ colorflip = function (node, color) {
   tweenArray.push (new TWEEN.Tween(node.children['circle'].fillColor).to(color, spd*150))
 }
 
+allEdges = function () {
+  globals.graphNodes.forEach ( function (gn) {
+    var already = gn.data.edges.map ( function (edge) {
+      return otherNode(edge.data.nodes, gn);
+    })
+    var remaining = globals.graphNodes.filter ( function (remgn) {
+      return already.indexOf(remgn) == -1 && gn != remgn;
+    })
+    paper = globals.scope1;
+    remaining.forEach( function (remgn) {
+      edge = new paper.Group({
+        children: [
+          new paper.Path.Line({
+            from: gn.position,
+            to: remgn.position,
+            strokeColor: 'maroon',
+            name: 'line'
+          }),
+          new PointText({
+            position: gn.position,
+            fontSize: 9,
+            font: 'courier new',
+            name: 'weight',
+            strokeColor: 'peru',
+            strokeWidth: 1,
+            data: {
+              auto: true,
+              gen: true
+            }
+          })
+        ],
+        data: {nodes: [gn, remgn]}
+      });
+      edge.sendToBack();
+      gn.data.edges.push(edge);
+      remgn.data.edges.push(edge);
+      updateEdgeWeight(edge);
+    })
+  })
+}
+
+updateEdgeWeight = function (edge){
+  var line = edge.children[0]
+  var weight = edge.children[1]
+  var difVector = sub(line.segments[0].point, line.segments[1].point);
+  weight.position = add(line.position, difVector.normalize(10).rotate(90));
+  if (weight.data.auto){
+    weight.content = Math.ceil(difVector.length).toString();
+  }
+}
+
+globals.secondmovie = function () {
+}
+
+salesman = function () {
+  allEdges();
+  tn = [];
+  paper = globals.scope2;
+  globals.graphNodes.forEach( function (gn) {
+    if (gn) {
+      var tn = new Group ({
+        position: gn.position,
+        children: [
+          new Path.Circle({
+            center: gn.position,
+            radius: radius,
+            fillColor: 'salmon',
+            strokeWidth: 1.6,
+            strokeColor: 'black',
+            name: 'circle'
+          }),
+          new PointText({
+            position: gn.position,
+            content: gn.children['label'].content,
+            name: 'label'
+          })],
+        data: {
+          edges: [],
+          graphnode: gn
+        }
+      });
+      tn.children['label'].point.x -= tn.children['label'].bounds.center.x - tn.position.x;
+      tn.children['label'].point.y -= tn.children['label'].bounds.center.y - tn.position.y;
+      gn.data.treenode = tn;
+      tree.push(tn);
+    }
+  })
+  tweenArray = []
+  var steps = tree.length;
+
+  agacencyMatrix = new Array (steps);
+  for (var i = 0; i < steps; i++) {
+    agacencyMatrix[i] = new Array (steps);
+    for (var j = 0; j < steps; j++) {
+      agacencyMatrix[i][j] = {
+        edge: null,
+        dist: null
+      }
+    }
+  }
+  for (var i = 0; i < steps - 1; i++) {
+    for (var j = i + 1; j < steps; j++) {
+      agacencyMatrix[i][j].edge = agacencyMatrix[j][i].edge = createTreeEdge(tree[i].data.graphnode, tree[j].data.graphnode, true)
+      agacencyMatrix[j][i].dist = agacencyMatrix[i][j].dist = parseInt(tree[i].data.graphnode.data.edges.filter(function (edge) {
+        return otherNode(edge.data.nodes, tree[i].data.graphnode) == tree[j].data.graphnode;
+      })[0].children[1].content)
+    }
+  }
+
+  currentTour = new Array (steps);
+  for (var i = 0; i < steps; i++) {
+    currentTour[i] = i;
+  }
+  shuffleArray(currentTour);
+  var temp = 1.0;
+  var tempdec = 0.996;
+  var k, flips, checkcost, currentcost, startcost, delta, tmp, flip1, flip2
+  startTour = []
+
+  var test = new Path.Circle({center: [293,134], radius: 35, fillColor: 'black'})
+
+  globals.secondMovie = function () {
+
+    console.log(temp *= tempdec);
+    test.position.x += 10;
+
+    startcost = function () {return tourCost(currentTour)}();
+    currentcost = startcost;
+    startTour = currentTour.slice(0,steps);
+
+    // if (k % 20 == 0) {
+    //   if (currentcost == checkcost) {
+    //     break;
+    //   }
+    //   checkcost = currentcost;
+    // }
+
+    for (var i = 0; i < 9; i++) {
+
+
+
+      flip1 = Math.floor(Math.random() * steps)
+      flip2 = Math.floor(Math.random() * steps)
+
+
+
+      tmp = currentTour[flip1];
+      currentTour[flip1] = currentTour[flip2];
+      currentTour[flip2] = tmp;
+
+
+      delta = function(){ return tourCost(currentTour)}() - currentcost;
+
+
+
+      if ( (delta < 0) || (Math.pow(Math.E, 20*(-delta)/temp) > Math.random()) ) {
+        currentcost += delta;
+      } else {
+        currentTour[flip2] = currentTour[flip1];
+        currentTour[flip1] = tmp;
+
+      }
+
+    }
+
+    if (currentcost < startcost) {
+      temp /= tempdec
+    }
+
+
+    for (var i = 0; i < steps; i++) {
+      agacencyMatrix[ startTour[i] ][ startTour[(i + 1) % steps] ].edge.opacity = 0;
+      agacencyMatrix[ currentTour[i] ][ currentTour[(i + 1) % steps] ].edge.opacity = 1;
+    }
+
+    // paper.view.update();
+
+  }
+}
+
+// renderTour = function (steps) {
+//   for (var i = 0; i < steps; i++) {
+//     agacencyMatrix[ startTour[i] ][ startTour[(i + 1) % steps] ].edge.opacity = 0;
+//     agacencyMatrix[ currentTour[i] ][ currentTour[(i + 1) % steps] ].edge.opacity = 1;
+//     startTour = currentTour.slice(0,steps);
+//   }
+// }
+
+tourCost = function(tour) {
+  var sum = 0
+  for (var i = 0; i < tour.length; i++) {
+    sum += agacencyMatrix[ tour[i] ][ tour[(i + 1) % tour.length] ].dist
+  }
+  return sum;
+}
+
+function shuffleArray(array) {
+  for (var i = array.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+  }
+  return array;
+}
+
+var visible = true
+
+toggleweight = function () {
+  globals.graphNodes.forEach ( function (gn) {
+    gn.data.edges.forEach( function (edge) {
+      edge.children[1].opacity = visible ? 0 : 1
+    })
+  })
+  visible = !visible
+}
 
 
 $('document').ready( function () {
@@ -407,6 +623,15 @@ $('document').ready( function () {
     })
     $('#bfs').on('click', function () {
       runSearch (bFs, globals.graphNodes[globals.selectedNode], dFsPlot)
+    })
+    $('#salesman').on('click', function () {
+      salesman()
+    })
+    $('#alledges').on('click', function () {
+      allEdges()
+    })
+    $('#toggleweight').on('click', function () {
+      toggleweight();
     })
   }, 2000);
   $

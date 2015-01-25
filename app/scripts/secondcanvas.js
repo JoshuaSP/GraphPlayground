@@ -5,8 +5,12 @@ if (globals) {
 	globals = {scope2: this}
 }
 
+globals.secondMovie = function (){}
+
 function onFrame(event) {
 	TWEEN.update();
+	globals.secondMovie();
+	// if (globals.secondMovie != function (){}) {debugger;}
 }
 
 var tn = null

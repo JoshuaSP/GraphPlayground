@@ -124,7 +124,7 @@ function onMouseDown(event) {
 }
 
 
-function updateEdgeWeight(edge){
+updateEdgeWeight = function (edge){
 	var line = edge.children[0]
 	var weight = edge.children[1]
 	var difVector = line.segments[0].point - line.segments[1].point;
