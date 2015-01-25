@@ -74,6 +74,7 @@ function onMouseDown(event) {
 		globals.searched = false;
 		return;
 	}
+	globals.secondMovie = function () {};
 	hitresult = project.hitTest(event.point)
 	modif = event.modifiers.clone()
 	gn = selector = eedge = weight = null;

@@ -3,7 +3,6 @@ console.log('\'Allo \'Allo!');
 var globals = globals || {}
 var speednow;
 
-var spd = 1
 paper.install(window)
 // var scope = new paper.PaperScope()
 
@@ -23,25 +22,34 @@ var tweenList
 globals.searched = false
 
 function runSearch(search, node, plot) {
-  if (!node) return;
+  if (search !== salesman && !node) {
+    $('#selectnode').modal('show');
+    return;
+  }
   if (globals.searched) {restoreAllNodes()}
   alledges.forEach(function (edge) {
     edge.remove();
   })
   if (tree.length > 0) {
-    tree.reduce(function (a,b){return a.concat(b);}).forEach(function (treenode) {
-      if (treenode) {treenode.remove()};
-    })
+    for (var i = 0; i < tree.length; i++) {
+      if (Array.isArray(tree[i])) {
+        tree[i].forEach ( function (tn) {
+          tn.remove();
+        })
+      } else {
+        tree[i].remove();
+      }
+    }
   }
   tree = [];
   alledges = [];
   globals.searched = true;
   tweenList = [];
   tree = [];
-  node.data.level = 0;
+  if (node) {node.data.level = 0;}
   search(node);
   fixpositions(plot);
-  playTweenArray(0);
+  if (tweenList.length > 0) {playTweenArray(0);}
 }
 
 restoreAllNodes = function () {
@@ -52,6 +60,13 @@ restoreAllNodes = function () {
         edge.children['line'].strokeColor = 'maroon';
         edge.children['line'].strokeWidth = 1.6;
         edge.data.examined = false;
+        // if (edge.data.gen) {
+        //   for (var = 0, i < 2; i++) {
+        //     edge.data.nodes[i].edges.splice(edge.data.nodes[i].edges.indexOf(edge),1)
+        //   }
+        //   alledges
+        //   edge.remove();
+        // }
       })
       node.data = {
         status: null,
@@ -76,6 +91,7 @@ function scalartimes (a,b) {
 }
 
 fixpositions = function (plot) {
+  if (!plot) {return;}
   var edgeVector,otherEdgeVector
   var collision = true;
   var i = 0;
@@ -212,7 +228,7 @@ function createTreeNode(node, parent) {
   } else {tree[level].push(tn);}
   tn.children['label'].point.x -= tn.children['label'].bounds.center.x - tn.position.x;
   tn.children['label'].point.y -= tn.children['label'].bounds.center.y - tn.position.y;
-  tweenArray.push(new TWEEN.Tween(tn).to({opacity: 1}, 500 * spd))
+  tweenArray.push(new TWEEN.Tween(tn).to({opacity: 1}, 500))
   addTweenArray(tweenArray)
 }
 
@@ -245,7 +261,7 @@ createTreeEdge = function (node, parent, newnode) {
     thistn.data.edges.push(edge);
   })
   alledges.push(edge)
-  tweenArray.push(new TWEEN.Tween(edge).to({opacity: 1}, spd*150));
+  tweenArray.push(new TWEEN.Tween(edge).to({opacity: 1}, 150));
   return edge;
 }
 
@@ -255,9 +271,9 @@ alledges = []
 function animateEdgeExamine(edge) {
   edge.data.examined = true;
   tweenArray.push(new TWEEN.Tween(edge.children['line'])
-    .to({strokeWidth: 6}, 800*spd))
+    .to({strokeWidth: 6}, 800))
   tweenArray.push(new TWEEN.Tween(edge.children['line'].strokeColor)
-    .to(disc_color, 800*spd))
+    .to(disc_color, 800))
 }
 
 tree = []
@@ -292,7 +308,7 @@ function dFs(node) {
   // tweenArray = [new TWEEN.Tween(node.children['circle'].fillColor).to(proc_color, 400*spd)];
   colorflip(node, proc_color)
   var i = 0
-  tweenArray.push(new TWEEN.Tween(i).to(1, 350*spd))
+  tweenArray.push(new TWEEN.Tween(i).to(1, 350))
   addTweenArray(tweenArray);
 }
 
@@ -323,9 +339,9 @@ function bFs(node) {
     })
     tweenArray = [];
     colorflip(node, proc_color);
-    foundNode.status = 'processed'
+    // node.status = 'processed'
     var i = 0;
-    tweenArray.push(new TWEEN.Tween(i).to(1, 350*spd));
+    tweenArray.push(new TWEEN.Tween(i).to(1, 350));
     addTweenArray(tweenArray);
     if (bFsQ.length == 0) {
       break;
@@ -374,7 +390,7 @@ function prim (node) {
 
 
 colorflip = function (node, color) {
-  tweenArray.push (new TWEEN.Tween(node.children['circle'].fillColor).to(color, spd*150))
+  tweenArray.push (new TWEEN.Tween(node.children['circle'].fillColor).to(color, 150))
 }
 
 allEdges = function () {
@@ -432,9 +448,11 @@ globals.secondmovie = function () {
 }
 
 salesman = function () {
+  // alledges = [];
   allEdges();
-  tn = [];
+  // tn = [];
   paper = globals.scope2;
+  tweenArray = [];
   globals.graphNodes.forEach( function (gn) {
     if (gn) {
       var tn = new Group ({
@@ -464,7 +482,7 @@ salesman = function () {
       tree.push(tn);
     }
   })
-  tweenArray = []
+
   var steps = tree.length;
 
   agacencyMatrix = new Array (steps);
@@ -492,16 +510,21 @@ salesman = function () {
   }
   shuffleArray(currentTour);
   var temp = 1.0;
-  var tempdec = 0.996;
+  var tempdec = 0.9992;
   var k, flips, checkcost, currentcost, startcost, delta, tmp, flip1, flip2
   startTour = []
 
-  var test = new Path.Circle({center: [293,134], radius: 35, fillColor: 'black'})
+  tweenList = [];
 
   globals.secondMovie = function () {
 
-    console.log(temp *= tempdec);
-    test.position.x += 10;
+    console.log(temp *= Math.pow(tempdec,(1/annealframe)));
+
+    for (var i = 0; i < steps; i++) {
+      tree[i].children['circle'].fillColor.red = 1 - (1 - temp * temp * temp) * 0.569;
+      tree[i].children['circle'].fillColor.green = 0.549 - (1 - temp * temp * temp) * 0.118;
+      tree[i].children['circle'].fillColor.blue = 0.412 + (1 - temp * temp * temp) * 0.188;
+    }
 
     startcost = function () {return tourCost(currentTour)}();
     currentcost = startcost;
@@ -514,38 +537,28 @@ salesman = function () {
     //   checkcost = currentcost;
     // }
 
-    for (var i = 0; i < 9; i++) {
-
-
+    for (var i = 0; i < annealframe; i++) {
 
       flip1 = Math.floor(Math.random() * steps)
       flip2 = Math.floor(Math.random() * steps)
-
-
 
       tmp = currentTour[flip1];
       currentTour[flip1] = currentTour[flip2];
       currentTour[flip2] = tmp;
 
-
       delta = function(){ return tourCost(currentTour)}() - currentcost;
 
-
-
-      if ( (delta < 0) || (Math.pow(Math.E, 20*(-delta)/temp) > Math.random()) ) {
+      if ( (delta < 0) || (Math.pow(Math.E, 0.1*(-delta)/temp) > Math.random()) ) {
         currentcost += delta;
       } else {
         currentTour[flip2] = currentTour[flip1];
         currentTour[flip1] = tmp;
-
       }
-
     }
 
     if (currentcost < startcost) {
       temp /= tempdec
     }
-
 
     for (var i = 0; i < steps; i++) {
       agacencyMatrix[ startTour[i] ][ startTour[(i + 1) % steps] ].edge.opacity = 0;
@@ -594,6 +607,7 @@ toggleweight = function () {
   visible = !visible
 }
 
+var annealframe = 1;
 
 $('document').ready( function () {
   // console.log(checker)
@@ -612,7 +626,10 @@ $('document').ready( function () {
   // 5 -> -1, 3->0, 1->1
   speedSlider.on("slide", function (slideEvt) {
     TWEEN.speed(slideEvt.value);
+    annealframe = slideEvt.value;
   })
+
+  
 
   setTimeout( function() {
     $('#dfs').on('click', function () {
@@ -625,7 +642,7 @@ $('document').ready( function () {
       runSearch (bFs, globals.graphNodes[globals.selectedNode], dFsPlot)
     })
     $('#salesman').on('click', function () {
-      salesman()
+      runSearch (salesman, globals.graphNodes[globals.selectedNode], null);
     })
     $('#alledges').on('click', function () {
       allEdges()
