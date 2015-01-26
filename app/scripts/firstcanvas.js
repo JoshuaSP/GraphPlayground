@@ -180,7 +180,7 @@ function onMouseDrag(event) {
 	} else if (weight) {
 		weight.data.auto = false;
 		weight.strokeColor = '#bd1616';
-		weight.content = Math.max((parseInt(weight.content) - event.delta.y),0).toString();
+		weight.content = Math.max(parseInt(weight.content - event.delta.y), 0).toString();
 	}
 }
 

@@ -10,14 +10,13 @@ globals.secondMovie = function (){}
 function onFrame(event) {
 	TWEEN.update();
 	globals.secondMovie();
-	// if (globals.secondMovie != function (){}) {debugger;}
 }
 
 var tn = null
 
 function onMouseDown(event) {
 	var hitresult = project.hitTest(event.point);
-	if (!hitresult) {return;}
+	if (!hitresult || !hitresult.item.name) {return;}
 	var hitname = hitresult.item.name.match(/^\w+/)[0];
 	if (hitname == 'circle' || hitname == 'label') {
 		tn = hitresult.item.parent;

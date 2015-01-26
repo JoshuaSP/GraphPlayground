@@ -1,22 +1,11 @@
-console.log('\'Allo \'Allo!');
-
 var globals = globals || {}
-var speednow;
 
 paper.install(window)
-// var scope = new paper.PaperScope()
-
-// paper.setup('canvas1')
-// paper.setup('canvas2')
-
-// var view_1 = scope.View._viewsById['canvas1'];
-// scope.setup(canvas1);
-// var view_2 = scope.View._viewsById['canvas2'];
-// scope.setup(canvas2);
 
 var proc_color = {red: 0, green: 0.808, blue: 0.82}
 var node_disc_color = {red: 0, green: 0.82, blue: 0.424}
 var disc_color = {red: 0.725, green: 0.427, blue: 0.949}
+var selected_edge_color = {red: 0.322, green: 0.835, blue: 0.408}
 
 var tweenList
 globals.searched = false
@@ -55,18 +44,15 @@ function runSearch(search, node, plot) {
 restoreAllNodes = function () {
   globals.graphNodes.forEach(function (node) {
     if (node) {
-      node.children['circle'].fillColor = 'salmon';
+      if (globals.graphNodes.indexOf(node) == globals.selectedNode) {
+        node.children['circle'].fillColor = 'yellow';
+      } else {
+        node.children['circle'].fillColor = 'salmon';
+      }
       node.data.edges.forEach( function(edge) {
         edge.children['line'].strokeColor = 'maroon';
         edge.children['line'].strokeWidth = 1.6;
         edge.data.examined = false;
-        // if (edge.data.gen) {
-        //   for (var = 0, i < 2; i++) {
-        //     edge.data.nodes[i].edges.splice(edge.data.nodes[i].edges.indexOf(edge),1)
-        //   }
-        //   alledges
-        //   edge.remove();
-        // }
       })
       node.data = {
         status: null,
@@ -105,7 +91,6 @@ fixpositions = function (plot) {
   while (collision && i < 35) {
     collision = false;
     i++
-    console.log(tree);
     for (var height = 0; height < tree.length; height++) {
       for (var pos = 0; pos < tree[height].length; pos++) {
         tn = tree[height][pos]
@@ -177,8 +162,6 @@ function addTweenArray (tweenArray) {
 
 
 function completeTween (tweenStack) {
-  // console.log(TWEEN.getAll())
-  // debugger;
   tweenStack.completed++
   if (tweenStack.completed >= tweenStack.tweenArray.length && !tweenStack.fired && tweenStack.id + 1 < tweenList.length) {
     playTweenArray(tweenStack.id + 1);
@@ -225,7 +208,8 @@ function createTreeNode(node, parent) {
       })],
     data: {
       edges: [],
-      poschange: 0
+      poschange: 0,
+      parent: parent
     }
   });
 
@@ -278,9 +262,9 @@ alledges = []
 function animateEdgeExamine(edge) {
   edge.data.examined = true;
   tweenArray.push(new TWEEN.Tween(edge.children['line'])
-    .to({strokeWidth: 6}, 800))
+    .to({strokeWidth: 6}, 400))
   tweenArray.push(new TWEEN.Tween(edge.children['line'].strokeColor)
-    .to(disc_color, 800))
+    .to(disc_color, 400))
 }
 
 tree = []
@@ -312,7 +296,6 @@ function dFs(node) {
     }
   })
   tweenArray = []
-  // tweenArray = [new TWEEN.Tween(node.children['circle'].fillColor).to(proc_color, 400*spd)];
   colorflip(node, proc_color)
   var i = 0
   tweenArray.push(new TWEEN.Tween(i).to(1, 350))
@@ -356,6 +339,22 @@ function bFs(node) {
       node = bFsQ.shift();
     }
   }
+  reorderTree();
+}
+
+reorderTree = function () {
+  for (var i = 0; i < tree.length; i++) {
+    var newindices = tree[i];
+    for (var j = 1; j < tree[i].length; j++) {
+      for (var k = 0; k < j; k++) {
+        if (tree[i-1].indexOf(tree[i][j].data.parent) < tree[i-1].indexOf(tree[i][k].data.parent)) {
+          newindices[j] = tree[i][k];
+          newindices[k] = tree[i][j];
+        }
+      }
+    }
+    tree[i] = newindices
+  }
 }
 
 
@@ -364,9 +363,18 @@ function prim (node) {
   while (true) {
     tweenArray = []
     node.data.status = 'intree'
+    if (node.data.parent) {
+      tweenArray.push(new TWEEN.Tween(node.data.edges.filter( function (edge) {
+        return otherNode(edge.data.nodes, node) == node.data.parent;
+      })[0].children['line']
+      .strokeColor).to(selected_edge_color, 400))
+    }
+    addTweenArray(tweenArray)
     colorflip(node, proc_color)
     createTreeNode(node, node.data.parent)
-    if (node.data.parent) {createTreeEdge(node, node.data.parent, true);}
+    if (node.data.parent) {
+      createTreeEdge(node, node.data.parent, true);
+    }
     addTweenArray(tweenArray)
     node.data.edges.forEach(function (edge) {
       foundNode = otherNode(edge.data.nodes, node)
@@ -393,6 +401,7 @@ function prim (node) {
     if (mindist == Infinity) {return;}
     node = globals.graphNodes[mapped.indexOf(mindist)];
   }
+  reorderTree();
 }
 
 
@@ -458,6 +467,15 @@ updateEdgeWeight = function (edge){
 globals.secondmovie = function () {
 }
 
+function tempd (x) {
+   return  9.9716068299164007e-001 * Math.pow(x,0)
+        +  6.5306859581671045e-004 * Math.pow(x,1)
+        + -6.1561325086651448e-005 * Math.pow(x,2)
+        +  2.8538236777371032e-006 * Math.pow(x,3)
+        + -6.4636309495877896e-008 * Math.pow(x,4)
+        +  5.7302975738943019e-010 * Math.pow(x,5);
+}
+
 salesman = function () {
   // alledges = [];
   allEdges();
@@ -521,15 +539,12 @@ salesman = function () {
   }
   shuffleArray(currentTour);
   var temp = 1.0;
-  var tempdec = .99995;
-  // var tempdec = -8.85956e-8*Math.pow(steps,4)+8.43248e-6*Math.pow(steps,3)-0.000295806*steps*steps+0.00453256*steps+0.973739
+  var tempdec = tempd(steps);
+  
   var k, flips, checkcost, currentcost, startcost, delta, tmp, flip1, flip2
   startTour = []
 
   tweenList = [];
-
-//   -6.48958×10^-8 x^4+6.70633×10^-6 x^3-0.000252778 x^2+0.00412122 x+0.975008
-// (data is perfectly fit by a 4th degree polynomial)
 
   globals.secondMovie = function () {
 
@@ -544,13 +559,6 @@ salesman = function () {
     startcost = function () {return tourCost(currentTour)}();
     currentcost = startcost;
     startTour = currentTour.slice(0,steps);
-
-    // if (k % 20 == 0) {
-    //   if (currentcost == checkcost) {
-    //     break;
-    //   }
-    //   checkcost = currentcost;
-    // }
 
     for (var i = 0; i < annealframe; i++) {
 
@@ -579,19 +587,9 @@ salesman = function () {
       agacencyMatrix[ startTour[i] ][ startTour[(i + 1) % steps] ].edge.opacity = 0;
       agacencyMatrix[ currentTour[i] ][ currentTour[(i + 1) % steps] ].edge.opacity = 1;
     }
-
-    // paper.view.update();
-
   }
 }
 
-// renderTour = function (steps) {
-//   for (var i = 0; i < steps; i++) {
-//     agacencyMatrix[ startTour[i] ][ startTour[(i + 1) % steps] ].edge.opacity = 0;
-//     agacencyMatrix[ currentTour[i] ][ currentTour[(i + 1) % steps] ].edge.opacity = 1;
-//     startTour = currentTour.slice(0,steps);
-//   }
-// }
 
 tourCost = function(tour) {
   var sum = 0
@@ -644,7 +642,6 @@ clearEdges = function () {
 var annealframe = 1;
 
 $('document').ready( function () {
-  // console.log(checker)
   var speedSlider = $('input.slider').slider({
     orientation: 'vertical',
     min: 1,
@@ -655,11 +652,6 @@ $('document').ready( function () {
     reversed: true
   })
   speedSlider.css('visibility', 'visible')
-  // speedSlider.on("slide", function (slideEvt) {
-  //   spd = Math.pow(5, (-slideEvt.value - 1)/2 + 2);
-  // })
-  // 1 -> 1/3, 5 -> 3, 3->1
-  // 5 -> -1, 3->0, 1->1
   speedSlider.on("slide", function (slideEvt) {
     TWEEN.speed(slideEvt.value/3);
     annealframe = slideEvt.value * 2 - 1;
