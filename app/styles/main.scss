@@ -3,6 +3,8 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/assets/fonts/boots
 @import "bootstrap-sass-official/assets/stylesheets/_bootstrap.scss";
 // endbower
 
+$dropdown-bg: #333;
+
 .browsehappy {
   margin: 0.2em 0;
   background: #ccc;
@@ -24,15 +26,45 @@ canvas {
   padding: 4px;
 }
 
+.modal {
+  text-align: center;
+}
+
+.modal:before {
+  display: inline-block;
+  vertical-align: middle;
+  content: " ";
+  height: 100%;
+}
+
+
+.modal-content {
+   background-color: navajowhite;
+}
+
+.modal-dialog {
+  display: inline-block;
+  text-align: left;
+  vertical-align: middle;
+}
+
 .btn-primary {
   margin-right: 10px;
   background-color: #cb7155;
   border-color: saddleBrown;
   display: inline-block;
+  &:focus {
+    background-color: #cb7155;
+  }
   &:hover {
     background-color: peru;
   }
 }
+
+.open > .btn-primary.dropdown-toggle {
+  background-color: peru;
+}
+
 
 .button-list {
   margin-top:15px;
@@ -52,11 +84,20 @@ canvas {
   border-bottom: 1px solid #e5e5e5;
 
   /* Make the masthead heading the same height as the navigation */
-  h3 {
+  .h3 {
     margin-top: 0;
     margin-bottom: 0;
     line-height: 40px;
-    padding-bottom: 19px;
+    color: #8d8b69;
+    padding-bottom: 10px;
+  }
+
+  .h5 {
+    color: #8d7b69;
+  }
+
+  p {
+    color: #AAAAAA;
   }
 }
 

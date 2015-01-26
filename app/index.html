@@ -29,35 +29,71 @@
           <li><a href="#">About</a></li>
           <li><a href="#">Contact</a></li>
         </ul> -->
-        <h3 class="text-muted">GraphPlayground</h3>
+       <span class="h3" style="display: inline-block; padding-bottom: 0px">GraphPlayground</span>
+        <p style="margin-top: 0px" class="h6"> Interactive exploration of graph-theory algorithms</p>
       </div>
 
 
-      <div class="modal fade" id="selectnode" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+     
+
+        
+        <canvas id="canvas1" style='border-radius:14px; background-color:navajowhite' width='700' height='225'></canvas>
+
+         <div class="modal fade" id="selectnode" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-          <div class="modal-content">
+          <div class="modal-content" style="background-color='navajowhite'">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title" id="myModalLabel">Modal title</h4>
-            </div>
-            <div class="modal-body">
-              Select a node before running this search!
+              <h4 class="modal-title" id="myModalLabel">Select a node before running this search!</h4>
             </div>
           </div>
         </div>
         </div>
 
-      
-        <canvas id="canvas1" style='border-radius:14px; background-color:navajowhite' width='700' height='225'></canvas>
+         <div class="modal fade" id="instructions" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content" style="background-color='navajowhite'">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="myModalLabel">Instructions</h4>
+            </div>
+            <div> <ul> <li>Click - Add Node</li>
+            <li>Shift-Click/Drag - Create Edge</li>
+            <li>Drag - Move Node/Change Edge Weight </li>
+            <li>Shift-Click - Restore Edge Weight to Default</li>
+            <li>Command-Click - Delete Node/Delete Edge </li> </ul>
+            <div class="modal-body"><p> Make your graph, then click "Run Search" to view the algorithm's output. You can vary the speed with the speed control. </p></div>  </div>
+          </div>
+        </div>
+        </div>
    
       <div width = '700' class ="button-list" role='group'>
-        <button type="button" id="dfs" class="btn btn-primary">Depth-First Search</button>
-        <button type="button" id="bfs" class="btn btn-primary">Breadth-First Search</button>
+        <button type="button" id="instruction" class="btn btn-primary">Instructions</button>
+        <div class="btn-group dropup">
+        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Run Search <span class="caret"></span></button>
+          <ul class="dropdown-menu" role="menu">
+            <li id="dfs"><a href="#canvas1">Depth-First Search</a></li>
+            <li id="bfs"><a href="#canvas1">Breadth-First Search</a></li>
+            <li id="prim"><a href="#canvas1">Prim's Algorithm</a></li>
+            <!-- <li class="divider"></li> -->
+            <li id="salesman"><a href="#canvas1">Travelling Salesman/<br>Simulated Annealing</a></li>
+          </ul>
+        </div>
+        <div class="btn-group dropup">
+        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Edges <span class="caret"></span></button>
+          <ul class="dropdown-menu" role="menu">
+            <li id="alledges"><a>Generate All Edges</a></li>
+            <li id="clearedges"><a>Clear Generated Edges</a></li>
+            <li id="toggleweight"><a>Display/Hide Edge Weights</a></li>
+          </ul>
+        </div>
+        <!-- <button type="button" id="dfs" class="btn btn-primary">Depth-First Search</button> -->
+        <!-- <button type="button" id="bfs" class="btn btn-primary">Breadth-First Search</button>
         <button type="button" id="prim" class="btn btn-primary">Prim's Algorithm</button>
-        <button type="button" id="salesman" class="btn btn-primary">Travelling Salesman by Simulated Annealing</button>
-        <button type="button" id="clear" class="btn btn-primary">Clear Nodes</button>
-        <button type="button" id="alledges" class="btn btn-primary">Generate All Edges</button>
-        <button type="button" id="toggleweight" class="btn btn-primary">Display Weights</button>
+        <button type="button" id="salesman" class="btn btn-primary">Travelling Salesman by Simulated Annealing</button> -->
+        <button type="button" id="clear" class="btn btn-primary">Clear</button>
+        <!-- <button type="button" id="alledges" class="btn btn-primary">Generate All Edges</button> -->
+      <!--   <button type="button" id="toggleweight" class="btn btn-primary">Display Weights</button> -->
         <!-- <button type="button" class="btn btn-primary">Dijkstra's Algorithm</button> -->
         <span style="color: white">Speed:</span>
         <input class="slider" style="visibility:hidden">
@@ -68,7 +104,7 @@
       </div> -->
       <div class="row marketing">
         
-        <div class="col-lg-6">
+        <!-- <div class="col-lg-6">
           <h4>HTML5 Boilerplate</h4>
           <p>HTML5 Boilerplate is a professional front-end template for building fast, robust, and adaptable web apps or sites.</p>
 
@@ -80,11 +116,11 @@
           <p>Sleek, intuitive, and powerful mobile first front-end framework for faster and easier web development.</p>
 
 
-        </div>
+        </div> -->
       </div>
 
       <div class="footer">
-        <p><span class="glyphicon glyphicon-heart"></span> from the Yeoman team</p>
+        <p>A project by Joshua Penman</p>
       </div>
 
     </div>
@@ -95,7 +131,6 @@
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/paper/dist/paper-full.js"></script>
     <script src="bower_components/seiyria-bootstrap-slider/dist/bootstrap-slider.min.js"></script>
-    <script src="bower_components/underscore/underscore-min.js"></script>
     <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/affix.js"></script>
     <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/alert.js"></script>
     <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/button.js"></script>

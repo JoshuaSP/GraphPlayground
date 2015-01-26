@@ -34,10 +34,10 @@ function runSearch(search, node, plot) {
     for (var i = 0; i < tree.length; i++) {
       if (Array.isArray(tree[i])) {
         tree[i].forEach ( function (tn) {
-          tn.remove();
+          if (tn) {tn.remove();}
         })
       } else {
-        tree[i].remove();
+        if (tree[i]) {tree[i].remove();}
       }
     }
   }
@@ -75,6 +75,13 @@ restoreAllNodes = function () {
       }
     }
   })
+}
+
+clearNodes = function () {
+  globals.graphNodes.forEach ( function (gn) {
+    if (gn) {deleteNode(gn);}
+  })
+  graphNodes = [];
 }
 
 
@@ -185,7 +192,7 @@ playTweenArray = function (id) {
   })
 }
 
-function otherNode (nodepair, node) {
+otherNode = function (nodepair, node) {
   return nodepair[(nodepair.indexOf(node)+1)%2]
 }
 
@@ -395,42 +402,46 @@ colorflip = function (node, color) {
 
 allEdges = function () {
   globals.graphNodes.forEach ( function (gn) {
-    var already = gn.data.edges.map ( function (edge) {
-      return otherNode(edge.data.nodes, gn);
-    })
-    var remaining = globals.graphNodes.filter ( function (remgn) {
-      return already.indexOf(remgn) == -1 && gn != remgn;
-    })
-    paper = globals.scope1;
-    remaining.forEach( function (remgn) {
-      edge = new paper.Group({
-        children: [
-          new paper.Path.Line({
-            from: gn.position,
-            to: remgn.position,
-            strokeColor: 'maroon',
-            name: 'line'
-          }),
-          new PointText({
-            position: gn.position,
-            fontSize: 9,
-            font: 'courier new',
-            name: 'weight',
-            strokeColor: 'peru',
-            strokeWidth: 1,
-            data: {
-              auto: true,
-              gen: true
-            }
-          })
-        ],
-        data: {nodes: [gn, remgn]}
-      });
-      edge.sendToBack();
-      gn.data.edges.push(edge);
-      remgn.data.edges.push(edge);
-      updateEdgeWeight(edge);
-    })
+    if (gn) {
+      var already = gn.data.edges.map ( function (edge) {
+        return otherNode(edge.data.nodes, gn);
+      })
+      var remaining = globals.graphNodes.filter ( function (remgn) {
+        return already.indexOf(remgn) == -1 && gn != remgn && remgn;
+      })
+      paper = globals.scope1;
+      remaining.forEach( function (remgn) {
+        edge = new paper.Group({
+          children: [
+            new paper.Path.Line({
+              from: gn.position,
+              to: remgn.position,
+              strokeColor: 'maroon',
+              name: 'line'
+            }),
+            new PointText({
+              position: gn.position,
+              fontSize: 9,
+              font: 'courier new',
+              name: 'weight',
+              strokeColor: 'peru',
+              strokeWidth: 1,
+              data: {
+                auto: true,
+              }
+            })
+          ],
+          data: {
+            nodes: [gn, remgn],
+            gen: true
+          }
+        });
+        edge.sendToBack();
+        gn.data.edges.push(edge);
+        remgn.data.edges.push(edge);
+        updateEdgeWeight(edge);
+      })
+    }
   })
 }
 
@@ -510,15 +521,19 @@ salesman = function () {
   }
   shuffleArray(currentTour);
   var temp = 1.0;
-  var tempdec = 0.9992;
+  var tempdec = .99995;
+  // var tempdec = -8.85956e-8*Math.pow(steps,4)+8.43248e-6*Math.pow(steps,3)-0.000295806*steps*steps+0.00453256*steps+0.973739
   var k, flips, checkcost, currentcost, startcost, delta, tmp, flip1, flip2
   startTour = []
 
   tweenList = [];
 
+//   -6.48958×10^-8 x^4+6.70633×10^-6 x^3-0.000252778 x^2+0.00412122 x+0.975008
+// (data is perfectly fit by a 4th degree polynomial)
+
   globals.secondMovie = function () {
 
-    console.log(temp *= Math.pow(tempdec,(1/annealframe)));
+    console.log(temp *= Math.pow(tempdec,annealframe));
 
     for (var i = 0; i < steps; i++) {
       tree[i].children['circle'].fillColor.red = 1 - (1 - temp * temp * temp) * 0.569;
@@ -600,11 +615,30 @@ var visible = true
 
 toggleweight = function () {
   globals.graphNodes.forEach ( function (gn) {
-    gn.data.edges.forEach( function (edge) {
-      edge.children[1].opacity = visible ? 0 : 1
-    })
+    if (gn) {
+      gn.data.edges.forEach( function (edge) {
+        edge.children[1].opacity = visible ? 0 : 1
+      })
+    }
   })
   visible = !visible
+}
+
+clearEdges = function () {
+  globals.graphNodes.forEach ( function (gn) {
+    if (gn) {
+      for (var i = gn.data.edges.length - 1; i >= 0; i--){
+        var edge = gn.data.edges[i];
+        if (edge.data.gen) {deleteEdge(edge);}
+      }
+    }
+  })
+  if (globals.searched) {
+    TWEEN.removeAll();
+    restoreAllNodes();
+    globals.secondMovie = function () {};
+    globals.searched = false;
+  }
 }
 
 var annealframe = 1;
@@ -614,8 +648,10 @@ $('document').ready( function () {
   var speedSlider = $('input.slider').slider({
     orientation: 'vertical',
     min: 1,
-    max: 5,
+    max: 10,
     step: 0.1,
+    tooltip: 'hide',
+    value: 5,
     reversed: true
   })
   speedSlider.css('visibility', 'visible')
@@ -625,8 +661,8 @@ $('document').ready( function () {
   // 1 -> 1/3, 5 -> 3, 3->1
   // 5 -> -1, 3->0, 1->1
   speedSlider.on("slide", function (slideEvt) {
-    TWEEN.speed(slideEvt.value);
-    annealframe = slideEvt.value;
+    TWEEN.speed(slideEvt.value/3);
+    annealframe = slideEvt.value * 2 - 1;
   })
 
   
@@ -647,8 +683,17 @@ $('document').ready( function () {
     $('#alledges').on('click', function () {
       allEdges()
     })
+    $('#clearedges').on('click', function () {
+      clearEdges();
+    })
     $('#toggleweight').on('click', function () {
       toggleweight();
+    })
+    $('#clear').on('click', function () {
+      clearNodes()
+    })
+    $('#instruction').on('click', function () {
+      $('#instructions').modal('show');
     })
   }, 2000);
   $

@@ -49,16 +49,15 @@ project.currentStyle = {
 	strokeWidth: 1.6
 };
 
-function deleteNode (gn) {
+deleteNode = function (gn) {
 	for (var i = gn.data.edges.length - 1; i > -1;i--){
-		gn.data.edges[i].remove()
-		gn.data.edges[i] = null
+		deleteEdge(gn.data.edges[i]);
 	};
 	globals.graphNodes[globals.graphNodes.indexOf(gn)] = null;
 	gn.remove();
 }
 
-function deleteEdge (edge) {
+deleteEdge = function (edge) {
 	for (var i = 0; i < 2; i++){
 		edge.data.nodes[i].data.edges.splice(edge.data.nodes[i].data.edges.indexOf(edge),1)
 	}
@@ -66,18 +65,20 @@ function deleteEdge (edge) {
 }
 
 
-var selector = gn = weight = eedge = globals.selectedNode = modif = null
+var selector, gn, weight, eedge, modif
+globals.selectedNode = null
+
 function onMouseDown(event) {
 	if (globals.searched) {
 		TWEEN.removeAll();
 		restoreAllNodes();
+		globals.secondMovie = function () {};
 		globals.searched = false;
 		return;
 	}
-	globals.secondMovie = function () {};
 	hitresult = project.hitTest(event.point)
 	modif = event.modifiers.clone()
-	gn = selector = eedge = weight = null;
+	gn = selector = edge = eedge = weight = null;
 	if (!hitresult) {
 		var i = 0
 		while (globals.graphNodes[i]) {i++;}
@@ -89,12 +90,14 @@ function onMouseDown(event) {
 			globals.graphNodes.push(gn);
 		}
 	} else {
+		if (!hitresult.item.name) {return;}
 		switch (hitresult.item.name.match(/^\w+/)[0]){
 			case 'circle':
 			case 'label':
 				gn = hitresult.item.parent;
-				if (event.modifiers.command) {
+				if (modif.command) {
 					deleteNode(gn);
+					gn = null;
 				} else {
 					if(globals.graphNodes[globals.selectedNode]) {
 						globals.graphNodes[globals.selectedNode].children['circle'].fillColor = 'salmon';
