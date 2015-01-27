@@ -1,7 +1,7 @@
 // var gzippo = require('gzippo');
 var express = require('express');
 var app = express();
-var logger = require('morgan');
+// var logger = require('morgan');
  var path = require('path')
 
 // app.use(logger);
