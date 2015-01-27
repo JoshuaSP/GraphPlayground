@@ -33,6 +33,7 @@
   "dependencies": {
     "express": "^4.11.1",
     "gzippo": "^0.2.0",
+    "morgan": "^1.5.1",
     "paper": "^0.9.21"
   }
 }
