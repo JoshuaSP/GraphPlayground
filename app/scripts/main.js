@@ -541,12 +541,12 @@ salesman = function () {
   var temp = 1.0;
   var tempdec = tempd(steps);
   
-  var k, flips, checkcost, currentcost, startcost, delta, tmp, flip1, flip2
-  startTour = []
+  var k, flips, checkcost, currentcost, startcost, delta, tmp, flip1, flip2;
+  startTour = [];
 
   tweenList = [];
 
-  globals.secondMovie = function () {
+  globalssecondMovie = function () {
 
     console.log(temp *= Math.pow(tempdec,annealframe));
 
