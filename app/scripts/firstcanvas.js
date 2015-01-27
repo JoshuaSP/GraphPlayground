@@ -1,18 +1,18 @@
-globals = {}
+globals = {};
 
 function toAlpha(num) {
-	return (num >= 26 ? String.fromCharCode(Math.floor(num/26)+64) : "") + String.fromCharCode(num%26 + 65);
+	return (num >= 26 ? String.fromCharCode(Math.floor(num/26)+64) : '') + String.fromCharCode(num%26 + 65);
 }
 
 function onFrame(event) {
 	TWEEN.update();
 }
 
-globals.scope1 = this
+globals.scope1 = this;
 
-settings.hitTolerance = 6
+settings.hitTolerance = 6;
 //
-var radius = 16
+var radius = 16;
 
 function createGraphNode(point,i) {
 	var gn = new Group ({
@@ -40,8 +40,8 @@ function createGraphNode(point,i) {
 	return gn;
 }
 
-globals.isWeighted = true
-globals.graphNodes = []
+globals.isWeighted = true;
+globals.graphNodes = [];
 
 project.currentStyle = {
 	strokeColor: '#000000',
@@ -52,21 +52,21 @@ project.currentStyle = {
 deleteNode = function (gn) {
 	for (var i = gn.data.edges.length - 1; i > -1;i--){
 		deleteEdge(gn.data.edges[i]);
-	};
+	}
 	globals.graphNodes[globals.graphNodes.indexOf(gn)] = null;
 	gn.remove();
-}
+};
 
 deleteEdge = function (edge) {
 	for (var i = 0; i < 2; i++){
-		edge.data.nodes[i].data.edges.splice(edge.data.nodes[i].data.edges.indexOf(edge),1)
+		edge.data.nodes[i].data.edges.splice(edge.data.nodes[i].data.edges.indexOf(edge),1);
 	}
 	edge.remove();
-}
+};
 
 
-var selector, gn, weight, eedge, modif
-globals.selectedNode = null
+var selector, gn, weight, eedge, modif;
+globals.selectedNode = null;
 
 function onMouseDown(event) {
 	if (globals.searched) {
@@ -75,12 +75,12 @@ function onMouseDown(event) {
 		globals.secondMovie = function () {};
 		globals.searched = false;
 		return;
-	}
-	hitresult = project.hitTest(event.point)
-	modif = event.modifiers.clone()
+	};
+	hitresult = project.hitTest(event.point);
+	modif = event.modifiers.clone();
 	gn = selector = edge = eedge = weight = null;
 	if (!hitresult) {
-		var i = 0
+		var i = 0;
 		while (globals.graphNodes[i]) {i++;}
 		gn = createGraphNode(event.point,i);
 		if (i < globals.graphNodes.length) {
@@ -109,13 +109,13 @@ function onMouseDown(event) {
 			case 'line':
 				eedge = hitresult.item;
 				if (event.modifiers.command) {
-					deleteEdge(eedge.parent)
+					deleteEdge(eedge.parent);
 				}
 				break;
 			case 'weight':
 				weight = hitresult.item;
 				if (event.modifiers.command) {
-					deleteEdge(weight.parent)
+					deleteEdge(weight.parent);
 				}
 				if (event.modifiers.shift) {
 					weight.data.auto = true;
@@ -129,18 +129,18 @@ function onMouseDown(event) {
 
 
 updateEdgeWeight = function (edge){
-	var line = edge.children[0]
-	var weight = edge.children[1]
+	var line = edge.children[0];
+	var weight = edge.children[1];
 	var difVector = line.segments[0].point - line.segments[1].point;
 	weight.position = line.position + difVector.normalize(10).rotate(90);
 	if (weight.data.auto){
 		weight.content = Math.ceil(difVector.length).toString();
 	}
-}
+};
 
 
-var edge = null
-var ngn = null
+var edge = null;
+var ngn = null;
 function onMouseDrag(event) {
 	if (gn) {
 		if (modif.shift) {
@@ -187,7 +187,7 @@ function onMouseDrag(event) {
 function onMouseUp(event){
 	if (edge) {
 		hitresult = project.hitTest(event.point);
-		if(['circle','label'].indexOf(hitresult.item.name) != -1) {
+		if(['circle','label'].indexOf(hitresult.item.name) !== -1) {
 			ngn = hitresult.item.parent;
 			if ([].concat.apply([],gn.data.edges.map(function (edge) {
 						return edge.data.nodes;
@@ -198,7 +198,7 @@ function onMouseUp(event){
 				updateEdgeWeight(finaledge);
 				gn.data.edges.push(finaledge);
 				ngn.data.edges.push(finaledge);
-			};
+			}
 		}
 		edge.remove();
 		edge = null;
