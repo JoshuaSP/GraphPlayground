@@ -3,7 +3,8 @@
   "private": true,
   "dependencies": {
     "paper": "~0.9.21",
-    "bootstrap-sass-official": "#3.2.0+2"
+    "bootstrap-sass-official": "#3.2.0+2",
+    "seiyria-bootstrap-slider": "*"
   },
   "version": "0.0.0",
   "authors": [
