@@ -1,13 +1,18 @@
 0 info it worked if it ends with ok
-1 verbose cli [ 'node', '/usr/local/bin/npm', 'install', 'bower-install' ]
+1 verbose cli [ 'node',
+1 verbose cli   '/usr/local/bin/npm',
+1 verbose cli   'install',
+1 verbose cli   'express',
+1 verbose cli   'gzipper',
+1 verbose cli   '--save' ]
 2 info using npm@1.4.28
 3 info using node@v0.10.35
 4 warn package.json graphplayground@ No description
 5 warn package.json graphplayground@ No repository field.
 6 warn package.json graphplayground@ No README data
 7 verbose readDependencies using package.json deps
-8 verbose cache add [ 'bower-install', null ]
-9 verbose cache add name=undefined spec="bower-install" args=["bower-install",null]
+8 verbose cache add [ 'express', null ]
+9 verbose cache add name=undefined spec="express" args=["express",null]
 10 verbose parsed url { protocol: null,
 10 verbose parsed url   slashes: null,
 10 verbose parsed url   auth: null,
@@ -17,71 +22,354 @@
 10 verbose parsed url   hash: null,
 10 verbose parsed url   search: null,
 10 verbose parsed url   query: null,
-10 verbose parsed url   pathname: 'bower-install',
-10 verbose parsed url   path: 'bower-install',
-10 verbose parsed url   href: 'bower-install' }
-11 silly lockFile a13a8413-bower-install bower-install
-12 verbose lock bower-install /Users/joshuapenman/.npm/a13a8413-bower-install.lock
-13 silly lockFile a13a8413-bower-install bower-install
-14 silly lockFile a13a8413-bower-install bower-install
-15 verbose addNamed [ 'bower-install', '' ]
-16 verbose addNamed [ null, '*' ]
-17 silly lockFile 57f94bde-bower-install bower-install@
-18 verbose lock bower-install@ /Users/joshuapenman/.npm/57f94bde-bower-install.lock
-19 silly addNameRange { name: 'bower-install', range: '*', hasData: false }
-20 verbose request where is /bower-install
-21 verbose request registry https://registry.npmjs.org/
-22 verbose request id 0f27cd9f2c76d6ce
-23 verbose url raw /bower-install
-24 verbose url resolving [ 'https://registry.npmjs.org/', './bower-install' ]
-25 verbose url resolved https://registry.npmjs.org/bower-install
-26 verbose request where is https://registry.npmjs.org/bower-install
-27 info trying registry request attempt 1 at 00:23:33
-28 http GET https://registry.npmjs.org/bower-install
-29 http 404 https://registry.npmjs.org/bower-install
-30 verbose headers { date: 'Sat, 17 Jan 2015 08:23:33 GMT',
-30 verbose headers   server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
-30 verbose headers   'content-type': 'application/json',
-30 verbose headers   'cache-control': 'max-age=0',
-30 verbose headers   'content-length': '52',
-30 verbose headers   'accept-ranges': 'bytes',
-30 verbose headers   via: '1.1 varnish',
-30 verbose headers   age: '0',
-30 verbose headers   'x-served-by': 'cache-lax1423-LAX',
-30 verbose headers   'x-cache': 'MISS',
-30 verbose headers   'x-cache-hits': '0',
-30 verbose headers   'x-timer': 'S1421483013.546859,VS0,VE184',
-30 verbose headers   'keep-alive': 'timeout=10, max=50',
-30 verbose headers   connection: 'Keep-Alive' }
-31 silly registry.get cb [ 404,
-31 silly registry.get   { date: 'Sat, 17 Jan 2015 08:23:33 GMT',
-31 silly registry.get     server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
-31 silly registry.get     'content-type': 'application/json',
-31 silly registry.get     'cache-control': 'max-age=0',
-31 silly registry.get     'content-length': '52',
-31 silly registry.get     'accept-ranges': 'bytes',
-31 silly registry.get     via: '1.1 varnish',
-31 silly registry.get     age: '0',
-31 silly registry.get     'x-served-by': 'cache-lax1423-LAX',
-31 silly registry.get     'x-cache': 'MISS',
-31 silly registry.get     'x-cache-hits': '0',
-31 silly registry.get     'x-timer': 'S1421483013.546859,VS0,VE184',
-31 silly registry.get     'keep-alive': 'timeout=10, max=50',
-31 silly registry.get     connection: 'Keep-Alive' } ]
-32 silly lockFile 57f94bde-bower-install bower-install@
-33 silly lockFile 57f94bde-bower-install bower-install@
-34 error 404 404 Not Found: bower-install
-34 error 404
-34 error 404 'bower-install' is not in the npm registry.
-34 error 404 You should bug the author to publish it
-34 error 404 It was specified as a dependency of 'graphplayground'
-34 error 404
-34 error 404 Note that you can also install from a
-34 error 404 tarball, folder, or http url, or git url.
-35 error System Darwin 14.0.0
-36 error command "node" "/usr/local/bin/npm" "install" "bower-install"
-37 error cwd /Users/joshuapenman/workspace/GraphPlayground
-38 error node -v v0.10.35
-39 error npm -v 1.4.28
-40 error code E404
-41 verbose exit [ 1, true ]
+10 verbose parsed url   pathname: 'express',
+10 verbose parsed url   path: 'express',
+10 verbose parsed url   href: 'express' }
+11 verbose cache add [ 'gzipper', null ]
+12 verbose cache add name=undefined spec="gzipper" args=["gzipper",null]
+13 verbose parsed url { protocol: null,
+13 verbose parsed url   slashes: null,
+13 verbose parsed url   auth: null,
+13 verbose parsed url   host: null,
+13 verbose parsed url   port: null,
+13 verbose parsed url   hostname: null,
+13 verbose parsed url   hash: null,
+13 verbose parsed url   search: null,
+13 verbose parsed url   query: null,
+13 verbose parsed url   pathname: 'gzipper',
+13 verbose parsed url   path: 'gzipper',
+13 verbose parsed url   href: 'gzipper' }
+14 silly lockFile f3c62de4-express express
+15 verbose lock express /Users/joshuapenman/.npm/f3c62de4-express.lock
+16 silly lockFile 8fd5c761-gzipper gzipper
+17 verbose lock gzipper /Users/joshuapenman/.npm/8fd5c761-gzipper.lock
+18 silly lockFile f3c62de4-express express
+19 silly lockFile f3c62de4-express express
+20 silly lockFile 8fd5c761-gzipper gzipper
+21 silly lockFile 8fd5c761-gzipper gzipper
+22 verbose addNamed [ 'express', '' ]
+23 verbose addNamed [ null, '*' ]
+24 silly lockFile 64a534c1-express express@
+25 verbose lock express@ /Users/joshuapenman/.npm/64a534c1-express.lock
+26 verbose addNamed [ 'gzipper', '' ]
+27 verbose addNamed [ null, '*' ]
+28 silly lockFile b675026f-gzipper gzipper@
+29 verbose lock gzipper@ /Users/joshuapenman/.npm/b675026f-gzipper.lock
+30 silly addNameRange { name: 'express', range: '*', hasData: false }
+31 silly addNameRange { name: 'gzipper', range: '*', hasData: false }
+32 verbose request where is /gzipper
+33 verbose request registry https://registry.npmjs.org/
+34 verbose request id 3c95ddc247479e08
+35 verbose url raw /gzipper
+36 verbose url resolving [ 'https://registry.npmjs.org/', './gzipper' ]
+37 verbose url resolved https://registry.npmjs.org/gzipper
+38 verbose request where is https://registry.npmjs.org/gzipper
+39 info trying registry request attempt 1 at 12:39:41
+40 http GET https://registry.npmjs.org/gzipper
+41 verbose request where is /express
+42 verbose request registry https://registry.npmjs.org/
+43 verbose url raw /express
+44 verbose url resolving [ 'https://registry.npmjs.org/', './express' ]
+45 verbose url resolved https://registry.npmjs.org/express
+46 verbose request where is https://registry.npmjs.org/express
+47 info trying registry request attempt 1 at 12:39:41
+48 verbose etag "E4ICYQIU9OVBRY69IADM3EBCJ"
+49 http GET https://registry.npmjs.org/express
+50 http 304 https://registry.npmjs.org/express
+51 silly registry.get cb [ 304,
+51 silly registry.get   { date: 'Tue, 27 Jan 2015 20:39:41 GMT',
+51 silly registry.get     server: 'Apache',
+51 silly registry.get     via: '1.1 varnish',
+51 silly registry.get     'last-modified': 'Tue, 27 Jan 2015 20:17:04 GMT',
+51 silly registry.get     'cache-control': 'max-age=60',
+51 silly registry.get     etag: '"E4ICYQIU9OVBRY69IADM3EBCJ"',
+51 silly registry.get     age: '23',
+51 silly registry.get     'x-served-by': 'cache-sjc3122-SJC',
+51 silly registry.get     'x-cache': 'HIT',
+51 silly registry.get     'x-cache-hits': '160',
+51 silly registry.get     'x-timer': 'S1422391181.990223,VS0,VE0',
+51 silly registry.get     vary: 'Accept',
+51 silly registry.get     'content-length': '0',
+51 silly registry.get     'keep-alive': 'timeout=10, max=50',
+51 silly registry.get     connection: 'Keep-Alive' } ]
+52 verbose etag https://registry.npmjs.org/express from cache
+53 silly addNameRange number 2 { name: 'express', range: '*', hasData: true }
+54 silly addNameRange versions [ 'express',
+54 silly addNameRange   [ '0.14.0',
+54 silly addNameRange     '0.14.1',
+54 silly addNameRange     '1.0.0',
+54 silly addNameRange     '1.0.1',
+54 silly addNameRange     '1.0.2',
+54 silly addNameRange     '1.0.3',
+54 silly addNameRange     '1.0.4',
+54 silly addNameRange     '1.0.5',
+54 silly addNameRange     '1.0.6',
+54 silly addNameRange     '1.0.7',
+54 silly addNameRange     '1.0.8',
+54 silly addNameRange     '2.0.0',
+54 silly addNameRange     '2.1.0',
+54 silly addNameRange     '2.1.1',
+54 silly addNameRange     '2.2.0',
+54 silly addNameRange     '2.2.1',
+54 silly addNameRange     '2.2.2',
+54 silly addNameRange     '2.3.0',
+54 silly addNameRange     '2.3.1',
+54 silly addNameRange     '2.3.2',
+54 silly addNameRange     '2.3.3',
+54 silly addNameRange     '2.3.4',
+54 silly addNameRange     '2.3.5',
+54 silly addNameRange     '2.3.6',
+54 silly addNameRange     '2.3.7',
+54 silly addNameRange     '2.3.8',
+54 silly addNameRange     '2.3.9',
+54 silly addNameRange     '2.3.10',
+54 silly addNameRange     '2.3.11',
+54 silly addNameRange     '2.3.12',
+54 silly addNameRange     '2.4.0',
+54 silly addNameRange     '2.4.1',
+54 silly addNameRange     '2.4.2',
+54 silly addNameRange     '2.4.3',
+54 silly addNameRange     '2.4.4',
+54 silly addNameRange     '2.4.5',
+54 silly addNameRange     '2.4.6',
+54 silly addNameRange     '2.4.7',
+54 silly addNameRange     '2.5.0',
+54 silly addNameRange     '2.5.1',
+54 silly addNameRange     '2.5.2',
+54 silly addNameRange     '2.5.3',
+54 silly addNameRange     '2.5.4',
+54 silly addNameRange     '2.5.5',
+54 silly addNameRange     '2.5.6',
+54 silly addNameRange     '2.5.7',
+54 silly addNameRange     '2.5.8',
+54 silly addNameRange     '2.5.9',
+54 silly addNameRange     '2.5.10',
+54 silly addNameRange     '2.5.11',
+54 silly addNameRange     '3.0.0',
+54 silly addNameRange     '3.0.1',
+54 silly addNameRange     '3.0.2',
+54 silly addNameRange     '3.0.3',
+54 silly addNameRange     '3.0.4',
+54 silly addNameRange     '3.0.5',
+54 silly addNameRange     '3.0.6',
+54 silly addNameRange     '3.1.0',
+54 silly addNameRange     '3.1.1',
+54 silly addNameRange     '3.1.2',
+54 silly addNameRange     '3.2.0',
+54 silly addNameRange     '3.2.1',
+54 silly addNameRange     '3.2.2',
+54 silly addNameRange     '3.2.3',
+54 silly addNameRange     '3.2.4',
+54 silly addNameRange     '3.2.5',
+54 silly addNameRange     '3.2.6',
+54 silly addNameRange     '3.3.0',
+54 silly addNameRange     '3.3.1',
+54 silly addNameRange     '3.3.2',
+54 silly addNameRange     '3.3.3',
+54 silly addNameRange     '3.3.4',
+54 silly addNameRange     '3.3.5',
+54 silly addNameRange     '3.3.6',
+54 silly addNameRange     '1.0.0-beta',
+54 silly addNameRange     '1.0.0-beta2',
+54 silly addNameRange     '1.0.0-rc',
+54 silly addNameRange     '1.0.0-rc2',
+54 silly addNameRange     '1.0.0-rc3',
+54 silly addNameRange     '1.0.0-rc4',
+54 silly addNameRange     '2.0.0-beta',
+54 silly addNameRange     '2.0.0-beta2',
+54 silly addNameRange     '2.0.0-beta3',
+54 silly addNameRange     '2.0.0-rc',
+54 silly addNameRange     '2.0.0-rc2',
+54 silly addNameRange     '2.0.0-rc3',
+54 silly addNameRange     '3.0.0-alpha1',
+54 silly addNameRange     '3.0.0-alpha2',
+54 silly addNameRange     '3.0.0-alpha3',
+54 silly addNameRange     '3.0.0-alpha4',
+54 silly addNameRange     '3.0.0-alpha5',
+54 silly addNameRange     '3.0.0-beta1',
+54 silly addNameRange     '3.0.0-beta2',
+54 silly addNameRange     '3.0.0-beta3',
+54 silly addNameRange     '3.0.0-beta4',
+54 silly addNameRange     '3.0.0-beta6',
+54 silly addNameRange     '3.0.0-beta7',
+54 silly addNameRange     '3.0.0-rc1',
+54 silly addNameRange     '3.0.0-rc2',
+54 silly addNameRange     '3.0.0-rc3',
+54 silly addNameRange     '3.0.0-rc4',
+54 silly addNameRange     '3.0.0-rc5',
+54 silly addNameRange     '3.3.7',
+54 silly addNameRange     '3.3.8',
+54 silly addNameRange     '3.4.0',
+54 silly addNameRange     '3.4.1',
+54 silly addNameRange     '3.4.2',
+54 silly addNameRange     '3.4.3',
+54 silly addNameRange     '3.4.4',
+54 silly addNameRange     '3.4.5',
+54 silly addNameRange     '3.4.6',
+54 silly addNameRange     '3.4.7',
+54 silly addNameRange     '3.4.8',
+54 silly addNameRange     '4.0.0-rc1',
+54 silly addNameRange     '4.0.0-rc2',
+54 silly addNameRange     '3.5.0',
+54 silly addNameRange     '4.0.0-rc3',
+54 silly addNameRange     '4.0.0-rc4',
+54 silly addNameRange     '3.5.1',
+54 silly addNameRange     '4.0.0',
+54 silly addNameRange     '3.5.2',
+54 silly addNameRange     '4.1.0',
+54 silly addNameRange     '4.1.1',
+54 silly addNameRange     '3.5.3',
+54 silly addNameRange     '4.1.2',
+54 silly addNameRange     '3.6.0',
+54 silly addNameRange     '4.2.0',
+54 silly addNameRange     '3.7.0',
+54 silly addNameRange     '3.8.0',
+54 silly addNameRange     '4.3.0',
+54 silly addNameRange     '4.3.1',
+54 silly addNameRange     '3.8.1',
+54 silly addNameRange     '4.3.2',
+54 silly addNameRange     '3.9.0',
+54 silly addNameRange     '4.4.0',
+54 silly addNameRange     '4.4.1',
+54 silly addNameRange     '3.10.0',
+54 silly addNameRange     '3.10.1',
+54 silly addNameRange     '3.10.2',
+54 silly addNameRange     '3.10.3',
+54 silly addNameRange     '3.10.4',
+54 silly addNameRange     '4.4.2',
+54 silly addNameRange     '3.10.5',
+54 silly addNameRange     '4.4.3',
+54 silly addNameRange     '3.11.0',
+54 silly addNameRange     '4.4.4',
+54 silly addNameRange     '3.12.0',
+54 silly addNameRange     '3.12.1',
+54 silly addNameRange     '4.4.5',
+54 silly addNameRange     '3.13.0',
+54 silly addNameRange     '4.5.0',
+54 silly addNameRange     '4.5.1',
+54 silly addNameRange     '3.14.0',
+54 silly addNameRange     '4.6.0',
+54 silly addNameRange     '4.6.1',
+54 silly addNameRange     '3.15.0',
+54 silly addNameRange     '4.7.0',
+54 silly addNameRange     '3.15.1',
+54 silly addNameRange     '4.7.1',
+54 silly addNameRange     '3.15.2',
+54 silly addNameRange     '4.7.2',
+54 silly addNameRange     '4.7.3',
+54 silly addNameRange     '3.15.3',
+54 silly addNameRange     '4.7.4',
+54 silly addNameRange     '3.16.0',
+54 silly addNameRange     '4.8.0',
+54 silly addNameRange     '3.16.1',
+54 silly addNameRange     '4.8.1',
+54 silly addNameRange     '3.16.2',
+54 silly addNameRange     '4.8.2',
+54 silly addNameRange     '3.16.3',
+54 silly addNameRange     '3.16.4',
+54 silly addNameRange     '4.8.3',
+54 silly addNameRange     '3.16.5',
+54 silly addNameRange     '3.16.6',
+54 silly addNameRange     '4.8.4',
+54 silly addNameRange     '3.16.7',
+54 silly addNameRange     '4.8.5',
+54 silly addNameRange     '3.16.8',
+54 silly addNameRange     '4.8.6',
+54 silly addNameRange     '3.16.9',
+54 silly addNameRange     '4.8.7',
+54 silly addNameRange     '3.16.10',
+54 silly addNameRange     '4.8.8',
+54 silly addNameRange     '3.17.0',
+54 silly addNameRange     '3.17.1',
+54 silly addNameRange     '4.9.0',
+54 silly addNameRange     '3.17.2',
+54 silly addNameRange     '4.9.1',
+54 silly addNameRange     '4.9.2',
+54 silly addNameRange     '3.17.3',
+54 silly addNameRange     '4.9.3',
+54 silly addNameRange     '3.17.4',
+54 silly addNameRange     '4.9.4',
+54 silly addNameRange     '3.17.5',
+54 silly addNameRange     '4.9.5',
+54 silly addNameRange     '3.17.6',
+54 silly addNameRange     '3.17.7',
+54 silly addNameRange     '4.9.6',
+54 silly addNameRange     '4.9.7',
+54 silly addNameRange     '3.17.8',
+54 silly addNameRange     '4.9.8',
+54 silly addNameRange     '3.18.0',
+54 silly addNameRange     '3.18.1',
+54 silly addNameRange     '4.10.0',
+54 silly addNameRange     '3.18.2',
+54 silly addNameRange     '4.10.1',
+54 silly addNameRange     '5.0.0-alpha.1',
+54 silly addNameRange     '3.18.3',
+54 silly addNameRange     '4.10.2',
+54 silly addNameRange     '3.18.4',
+54 silly addNameRange     '4.10.3',
+54 silly addNameRange     '4.10.4',
+54 silly addNameRange     '4.10.5',
+54 silly addNameRange     '3.18.5',
+54 silly addNameRange     '3.18.6',
+54 silly addNameRange     '4.10.6',
+54 silly addNameRange     '4.10.7',
+54 silly addNameRange     '3.19.0',
+54 silly addNameRange     '4.10.8',
+54 silly addNameRange     '4.11.0',
+54 silly addNameRange     '3.19.1',
+54 silly addNameRange     '4.11.1' ] ]
+55 verbose addNamed [ 'express', '4.11.1' ]
+56 verbose addNamed [ '4.11.1', '4.11.1' ]
+57 silly lockFile 08bdadd9-express-4-11-1 express@4.11.1
+58 verbose lock express@4.11.1 /Users/joshuapenman/.npm/08bdadd9-express-4-11-1.lock
+59 silly lockFile 08bdadd9-express-4-11-1 express@4.11.1
+60 silly lockFile 08bdadd9-express-4-11-1 express@4.11.1
+61 silly lockFile 64a534c1-express express@
+62 silly lockFile 64a534c1-express express@
+63 http 404 https://registry.npmjs.org/gzipper
+64 verbose headers { date: 'Tue, 27 Jan 2015 20:39:42 GMT',
+64 verbose headers   server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+64 verbose headers   'content-type': 'application/json',
+64 verbose headers   'cache-control': 'max-age=0',
+64 verbose headers   'content-length': '52',
+64 verbose headers   'accept-ranges': 'bytes',
+64 verbose headers   via: '1.1 varnish',
+64 verbose headers   age: '0',
+64 verbose headers   'x-served-by': 'cache-sjc3125-SJC',
+64 verbose headers   'x-cache': 'MISS',
+64 verbose headers   'x-cache-hits': '0',
+64 verbose headers   'x-timer': 'S1422391181.983944,VS0,VE358',
+64 verbose headers   'keep-alive': 'timeout=10, max=50',
+64 verbose headers   connection: 'Keep-Alive' }
+65 silly registry.get cb [ 404,
+65 silly registry.get   { date: 'Tue, 27 Jan 2015 20:39:42 GMT',
+65 silly registry.get     server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+65 silly registry.get     'content-type': 'application/json',
+65 silly registry.get     'cache-control': 'max-age=0',
+65 silly registry.get     'content-length': '52',
+65 silly registry.get     'accept-ranges': 'bytes',
+65 silly registry.get     via: '1.1 varnish',
+65 silly registry.get     age: '0',
+65 silly registry.get     'x-served-by': 'cache-sjc3125-SJC',
+65 silly registry.get     'x-cache': 'MISS',
+65 silly registry.get     'x-cache-hits': '0',
+65 silly registry.get     'x-timer': 'S1422391181.983944,VS0,VE358',
+65 silly registry.get     'keep-alive': 'timeout=10, max=50',
+65 silly registry.get     connection: 'Keep-Alive' } ]
+66 silly lockFile b675026f-gzipper gzipper@
+67 silly lockFile b675026f-gzipper gzipper@
+68 error 404 404 Not Found: gzipper
+68 error 404
+68 error 404 'gzipper' is not in the npm registry.
+68 error 404 You should bug the author to publish it
+68 error 404 It was specified as a dependency of 'graphplayground'
+68 error 404
+68 error 404 Note that you can also install from a
+68 error 404 tarball, folder, or http url, or git url.
+69 error System Darwin 14.0.0
+70 error command "node" "/usr/local/bin/npm" "install" "express" "gzipper" "--save"
+71 error cwd /Users/joshuapenman/workspace/GraphPlayground
+72 error node -v v0.10.35
+73 error npm -v 1.4.28
+74 error code E404
+75 verbose exit [ 1, true ]
