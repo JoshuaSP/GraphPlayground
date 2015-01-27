@@ -1,30 +1,30 @@
-var globals = globals || {};
+var globals = globals || {}
 
-paper.install(window);
+paper.install(window)
 
-var proc_color = {red: 0, green: 0.808, blue: 0.82};
-var node_disc_color = {red: 0, green: 0.82, blue: 0.424};
-var disc_color = {red: 0.725, green: 0.427, blue: 0.949};
-var selected_edge_color = {red: 0.322, green: 0.835, blue: 0.408};
+var proc_color = {red: 0, green: 0.808, blue: 0.82}
+var node_disc_color = {red: 0, green: 0.82, blue: 0.424}
+var disc_color = {red: 0.725, green: 0.427, blue: 0.949}
+var selected_edge_color = {red: 0.322, green: 0.835, blue: 0.408}
 
-var tweenList;
-globals.searched = false;
+var tweenList
+globals.searched = false
 
 function runSearch(search, node, plot) {
   if (search !== salesman && !node) {
     $('#selectnode').modal('show');
     return;
   }
-  if (globals.searched) {restoreAllNodes();}
+  if (globals.searched) {restoreAllNodes()}
   alledges.forEach(function (edge) {
     edge.remove();
-  });
+  })
   if (tree.length > 0) {
     for (var i = 0; i < tree.length; i++) {
       if (Array.isArray(tree[i])) {
         tree[i].forEach ( function (tn) {
           if (tn) {tn.remove();}
-        });
+        })
       } else {
         if (tree[i]) {tree[i].remove();}
       }
@@ -44,7 +44,7 @@ function runSearch(search, node, plot) {
 restoreAllNodes = function () {
   globals.graphNodes.forEach(function (node) {
     if (node) {
-      if (globals.graphNodes.indexOf(node) === globals.selectedNode) {
+      if (globals.graphNodes.indexOf(node) == globals.selectedNode) {
         node.children['circle'].fillColor = 'yellow';
       } else {
         node.children['circle'].fillColor = 'salmon';
@@ -53,52 +53,52 @@ restoreAllNodes = function () {
         edge.children['line'].strokeColor = 'maroon';
         edge.children['line'].strokeWidth = 1.6;
         edge.data.examined = false;
-      });
+      })
       node.data = {
         status: null,
         edges: node.data.edges,
         dist: Infinity
-      };
+      }
     }
-  });
-};
+  })
+}
 
 clearNodes = function () {
   globals.graphNodes.forEach ( function (gn) {
     if (gn) {deleteNode(gn);}
-  });
+  })
   graphNodes = [];
-};
+}
 
 
 function sub (a,b) {
-  return new paper.Point(a.x - b.x, a.y - b.y);
+  return new paper.Point(a.x - b.x, a.y - b.y)
 }
 
 function add (a,b) {
-  return new paper.Point(a.x + b.x, a.y + b.y);
+  return new paper.Point(a.x + b.x, a.y + b.y)
 }
 
 function scalartimes (a,b) {
-  return new paper.Point(a.x * b, a.y * b);
+  return new paper.Point(a.x * b, a.y * b)
 }
 
 fixpositions = function (plot) {
   if (!plot) {return;}
-  var edgeVector,otherEdgeVector;
+  var edgeVector,otherEdgeVector
   var collision = true;
   var i = 0;
   while (collision && i < 35) {
     collision = false;
-    i++;
+    i++
     for (var height = 0; height < tree.length; height++) {
       for (var pos = 0; pos < tree[height].length; pos++) {
-        tn = tree[height][pos];
+        tn = tree[height][pos]
         if (tn){
           tn.position = plot (height+1, pos+1, tree.length, tree[height].length);
           tn.position.x += tn.data.poschange;
           for (var edgeindex = 0; edgeindex<tn.data.edges.length; edgeindex++) {
-            edge = tn.data.edges[edgeindex];
+            edge = tn.data.edges[edgeindex]
             edge.segments[edge.data.nodes.indexOf(tn)].point = tn.position;
           }
         }
@@ -106,14 +106,14 @@ fixpositions = function (plot) {
     }
     colloop: for (height = tree.length - 1; height >= 0; height--) {
       for (pos = 0; pos < tree[height].length; pos++) {
-        tn = tree[height][pos];
+        tn = tree[height][pos]
         if (tn){
           for (var edgeindex = 0; edgeindex<tn.data.edges.length; edgeindex++) {
-            edge = tn.data.edges[edgeindex];
-            edgeVector = sub(edge.segments[1].point, edge.segments[0].point);
-            var othertn = otherNode(edge.data.nodes, tn);
+            edge = tn.data.edges[edgeindex]
+            edgeVector = sub(edge.segments[1].point, edge.segments[0].point)
+            var othertn = otherNode(edge.data.nodes, tn)
             for (var otheredgeindex = 0; otheredgeindex < othertn.data.edges.length; otheredgeindex++) {
-              otherEdge = othertn.data.edges[otheredgeindex];
+              otherEdge = othertn.data.edges[otheredgeindex]
               if (otherEdge !== edge) {
                 otherEdgeVector = sub(otherEdge.segments[1].point, otherEdge.segments[0].point)
                 if (edgeVector.isColinear(otherEdgeVector)) {
@@ -296,29 +296,29 @@ function dFs(node) {
     }
   })
   tweenArray = []
-  colorflip(node, proc_color);
-  var i = 0;
-  tweenArray;.push(new TWEEN.Tween(i).to(1, 350))
-  addTweenArray(tweenArray);;
+  colorflip(node, proc_color)
+  var i = 0
+  tweenArray.push(new TWEEN.Tween(i).to(1, 350))
+  addTweenArray(tweenArray);
 }
-;
-function bFs(node) {;
+
+function bFs(node) {
   var bFsQ = [];
   tweenArray = []
   colorflip(node, node_disc_color)
   createTreeNode(node, null);
   addTweenArray(tweenArray);
   while (true) {
-    node.data.edges.forEach(function (edge) ;{
+    node.data.edges.forEach(function (edge) {
       var newnode = false
       tweenArray = []
-      if (!edge.data.examined) {;
+      if (!edge.data.examined) {
         animateEdgeExamine(edge)
         foundNode = otherNode(edge.data.nodes, node)
         if (foundNode.data.status == null){
           newnode = true
           createTreeNode(foundNode, node);
-          colorflip(foundNode, node_disc_color;)
+          colorflip(foundNode, node_disc_color)
           foundNode.data.status = 'discovered'
           bFsQ.push(foundNode)
         }
@@ -328,73 +328,73 @@ function bFs(node) {;
       }
     })
     tweenArray = [];
-    colorflip(node, proc_color);;
-    // node.status = 'processed';
-    var i = 0;;
-    tweenArray.push(new TWEEN.Tween(i).to(1, 350));;
+    colorflip(node, proc_color);
+    // node.status = 'processed'
+    var i = 0;
+    tweenArray.push(new TWEEN.Tween(i).to(1, 350));
     addTweenArray(tweenArray);
-    if (bFsQ.length == 0) {;
-      break;;
+    if (bFsQ.length == 0) {
+      break;
     } else {
       node = bFsQ.shift();
     }
   }
   reorderTree();
-};
+}
 
-reorderTree == function () {
-  ;for (var i = 0; i < tree.length; i++) {
+reorderTree = function () {
+  for (var i = 0; i < tree.length; i++) {
     var newindices = tree[i];
     for (var j = 1; j < tree[i].length; j++) {
       for (var k = 0; k < j; k++) {
         if (tree[i-1].indexOf(tree[i][j].data.parent) < tree[i-1].indexOf(tree[i][k].data.parent)) {
           newindices[j] = tree[i][k];
-          newindices;[k] = tree[i][j];
+          newindices[k] = tree[i][j];
         }
-      };
+      }
     }
     tree[i] = newindices
   }
 }
-;
 
-f;unction prim (node) {
-  ;node.data.parent = null;
+
+function prim (node) {
+  node.data.parent = null;
   while (true) {
     tweenArray = []
     node.data.status = 'intree'
     if (node.data.parent) {
-      tweenArray;.push(new TWEEN.Tween(node.data.edges.filter( function (edge) {
+      tweenArray.push(new TWEEN.Tween(node.data.edges.filter( function (edge) {
         return otherNode(edge.data.nodes, node) == node.data.parent;
-      })[0].child;ren['line']
+      })[0].children['line']
       .strokeColor).to(selected_edge_color, 400))
     }
     addTweenArray(tweenArray)
-    colorflip(node, proc_color)=;
-    createTreeNode(node, node.data.parent);
-    if (node.data.parent) {;
-      createTreeEdge(node, node.data.parent, true);;
+    colorflip(node, proc_color)
+    createTreeNode(node, node.data.parent)
+    if (node.data.parent) {
+      createTreeEdge(node, node.data.parent, true);
     }
-    addTweenArray(tweenArray);
-    node.data.edges.forEach(function (edge) {;
+    addTweenArray(tweenArray)
+    node.data.edges.forEach(function (edge) {
       foundNode = otherNode(edge.data.nodes, node)
       if (!edge.data.examined && foundNode.data.status != 'intree') {
-        tweenArray = [];
+        tweenArray = []
         animateEdgeExamine(edge)
         colorflip(foundNode, node_disc_color)
         addTweenArray(tweenArray)
-        foundNode.data.status = 'examined;'
-        if (parseInt(edg;e.children[1].content) < foundNode.data.dist) {
+        foundNode.data.status = 'examined'
+        if (parseInt(edge.children[1].content) < foundNode.data.dist) {
           foundNode.data.dist = parseInt(edge.children[1].content)
-          foundNode.data.;parent = node;
-        };
+          foundNode.data.parent = node
+        }
       }
     })
     var mapped = globals.graphNodes.map ( function (gn){
       if (!gn || gn.data.status == 'intree') {
-        return; Infinity;
-;      } else {
-        return ;gn.data.dist;
+        return Infinity;
+      } else {
+        return gn.data.dist;
       }
     })
     var mindist = Math.min.apply(Math, mapped);
@@ -413,7 +413,7 @@ allEdges = function () {
   globals.graphNodes.forEach ( function (gn) {
     if (gn) {
       var already = gn.data.edges.map ( function (edge) {
-        return otherNode(edge.data.nodes,= gn);
+        return otherNode(edge.data.nodes, gn);
       })
       var remaining = globals.graphNodes.filter ( function (remgn) {
         return already.indexOf(remgn) == -1 && gn != remgn && remgn;
@@ -422,22 +422,22 @@ allEdges = function () {
       remaining.forEach( function (remgn) {
         edge = new paper.Group({
           children: [
-            new paper.Path.Line({;
+            new paper.Path.Line({
               from: gn.position,
               to: remgn.position,
               strokeColor: 'maroon',
               name: 'line'
-            }),;
+            }),
             new PointText({
-              po;sition: gn.position,
-              fon;tSize: 9,
+              position: gn.position,
+              fontSize: 9,
               font: 'courier new',
               name: 'weight',
               strokeColor: 'peru',
               strokeWidth: 1,
-              data:; {
+              data: {
                 auto: true,
-              };
+              }
             })
           ],
           data: {
@@ -541,12 +541,12 @@ salesman = function () {
   var temp = 1.0;
   var tempdec = tempd(steps);
   
-  var k, flips, checkcost, currentcost, startcost, delta, tmp, flip1, flip2;
-  startTour = [];
+  var k, flips, checkcost, currentcost, startcost, delta, tmp, flip1, flip2
+  startTour = []
 
   tweenList = [];
 
-  globalssecondMovie = function () {
+  globals.secondMovie = function () {
 
     console.log(temp *= Math.pow(tempdec,annealframe));
 
