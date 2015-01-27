@@ -8,11 +8,12 @@
     <link rel="shortcut icon" href="/favicon.ico?v=1">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) styles/vendor.css -->
-    <link rel="stylesheet" href="bower_components/seiyria-bootstrap-slider/dist/css/bootstrap-slider.css">
+    
     <!-- bower:css -->
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
+    <link rel="stylesheet" href="bower_components/seiyria-bootstrap-slider/dist/css/bootstrap-slider.css">
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
   </head>
@@ -130,7 +131,6 @@
     <!-- bower:js -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/paper/dist/paper-full.js"></script>
-    <script src="bower_components/seiyria-bootstrap-slider/dist/bootstrap-slider.min.js"></script>
     <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/affix.js"></script>
     <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/alert.js"></script>
     <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/button.js"></script>
@@ -144,6 +144,7 @@
     <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/tooltip.js"></script>
     <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/popover.js"></script>
     <!-- endbower -->
+     <script src="bower_components/seiyria-bootstrap-slider/js/bootstrap-slider.js"></script>
     <!-- endbuild -->
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
@@ -157,12 +158,16 @@
     </script>
 
         <!-- build:js({app,.tmp}) scripts/main.js -->
-        <script type="text/paperscript" src="scripts/firstcanvas.js" canvas="canvas1"></script>
-        <script type="text/paperscript" src="scripts/secondcanvas.js" canvas="canvas2"></script>
+        
 
         <script src="scripts/main.js"></script>
          <script src="lib/Tween.js"></script>
         
         <!-- endbuild -->
+        <!-- copy:js scripts/ -->
+        <script type="text/paperscript" src="scripts/firstcanvas.js" canvas="canvas1"></script>
+        <script type="text/paperscript" src="scripts/secondcanvas.js" canvas="canvas2"></script>
+        <!-- endcopy -->
+
 </body>
 </html>
