@@ -6,7 +6,7 @@ var disc_color = {red: 0.725, green: 0.427, blue: 0.949}
 var selected_edge_color = {red: 0.322, green: 0.835, blue: 0.408}
 
 var tweenList
-if (globals) {
+if (typeof globals !== "undefined") {
   globals.searched = false
 } else {
   globals = {searched:false}
@@ -466,7 +466,7 @@ updateEdgeWeight = function (edge){
   }
 }
 
-globals.secondmovie = function () {
+globals.secondMovie = function () {
 }
 
 function tempd (x) {

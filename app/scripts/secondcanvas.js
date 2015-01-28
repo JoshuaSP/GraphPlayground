@@ -1,5 +1,5 @@
 
-if (globals) {
+if (typeof globals !== "undefined") {
 	globals.scope2 = this
 } else {
 	globals = {scope2: this}
@@ -9,7 +9,7 @@ globals.secondMovie = function (){}
 
 function onFrame(event) {
 	TWEEN.update();
-	if (globals.secondMovie) {
+	if (typeof globals.secondMovie !== "undefined") {
 		globals.secondMovie();
 	}
 }

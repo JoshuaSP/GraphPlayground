@@ -1,3 +1,5 @@
+
+
 function toAlpha(num) {
 	return (num >= 26 ? String.fromCharCode(Math.floor(num/26)+64) : "") + String.fromCharCode(num%26 + 65);
 }
@@ -6,11 +8,13 @@ function onFrame(event) {
 	TWEEN.update();
 }
 
-if (globals) {
-	globals.scope1 = this
+var tweenList
+if (typeof globals !== "undefined") {
+  globals.scope1 = this
 } else {
-	globals = {scope1: this}
+  globals = {scope1:this}
 }
+
 
 settings.hitTolerance = 6
 //
