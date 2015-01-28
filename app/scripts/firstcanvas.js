@@ -1,5 +1,3 @@
-globals = {}
-
 function toAlpha(num) {
 	return (num >= 26 ? String.fromCharCode(Math.floor(num/26)+64) : "") + String.fromCharCode(num%26 + 65);
 }
@@ -8,7 +6,11 @@ function onFrame(event) {
 	TWEEN.update();
 }
 
-globals.scope1 = this
+if (globals) {
+	globals.scope1 = this
+} else {
+	globals = {scope1: this}
+}
 
 settings.hitTolerance = 6
 //

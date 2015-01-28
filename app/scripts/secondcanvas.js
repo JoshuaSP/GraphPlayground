@@ -9,7 +9,9 @@ globals.secondMovie = function (){}
 
 function onFrame(event) {
 	TWEEN.update();
-	globals.secondMovie();
+	if (globals.secondMovie) {
+		globals.secondMovie();
+	}
 }
 
 var tn = null

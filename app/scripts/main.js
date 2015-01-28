@@ -1,5 +1,3 @@
-var globals = globals || {}
-
 paper.install(window)
 
 var proc_color = {red: 0, green: 0.808, blue: 0.82}
@@ -8,7 +6,11 @@ var disc_color = {red: 0.725, green: 0.427, blue: 0.949}
 var selected_edge_color = {red: 0.322, green: 0.835, blue: 0.408}
 
 var tweenList
-globals.searched = false
+if (globals) {
+  globals.searched = false
+} else {
+  globals = {searched:false}
+}
 
 function runSearch(search, node, plot) {
   if (search !== salesman && !node) {
@@ -548,7 +550,7 @@ salesman = function () {
 
   globals.secondMovie = function () {
 
-    console.log(temp *= Math.pow(tempdec,annealframe));
+    temp *= Math.pow(tempdec,annealframe);
 
     for (var i = 0; i < steps; i++) {
       tree[i].children['circle'].fillColor.red = 1 - (1 - temp * temp * temp) * 0.569;
