@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 globals = {};
+=======
+
+>>>>>>> working-ver
 
 function toAlpha(num) {
 	return (num >= 26 ? String.fromCharCode(Math.floor(num/26)+64) : '') + String.fromCharCode(num%26 + 65);
@@ -8,7 +12,17 @@ function onFrame(event) {
 	TWEEN.update();
 }
 
+<<<<<<< HEAD
 globals.scope1 = this;
+=======
+var tweenList
+if (typeof globals !== "undefined") {
+  globals.scope1 = this
+} else {
+  globals = {scope1:this}
+}
+
+>>>>>>> working-ver
 
 settings.hitTolerance = 6;
 //

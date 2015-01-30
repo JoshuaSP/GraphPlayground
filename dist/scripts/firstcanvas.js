@@ -1,18 +1,39 @@
+<<<<<<< HEAD
 globals = {};
 
 function toAlpha(num) {
 	return (num >= 26 ? String.fromCharCode(Math.floor(num/26)+64) : '') + String.fromCharCode(num%26 + 65);
+=======
+
+
+function toAlpha(num) {
+	return (num >= 26 ? String.fromCharCode(Math.floor(num/26)+64) : "") + String.fromCharCode(num%26 + 65);
+>>>>>>> working-ver
 }
 
 function onFrame(event) {
 	TWEEN.update();
 }
 
+<<<<<<< HEAD
 globals.scope1 = this;
 
 settings.hitTolerance = 6;
 //
 var radius = 16;
+=======
+var tweenList
+if (typeof globals !== "undefined") {
+  globals.scope1 = this
+} else {
+  globals = {scope1:this}
+}
+
+
+settings.hitTolerance = 6
+//
+var radius = 16
+>>>>>>> working-ver
 
 function createGraphNode(point,i) {
 	var gn = new Group ({
@@ -40,8 +61,13 @@ function createGraphNode(point,i) {
 	return gn;
 }
 
+<<<<<<< HEAD
 globals.isWeighted = true;
 globals.graphNodes = [];
+=======
+globals.isWeighted = true
+globals.graphNodes = []
+>>>>>>> working-ver
 
 project.currentStyle = {
 	strokeColor: '#000000',
@@ -52,6 +78,7 @@ project.currentStyle = {
 deleteNode = function (gn) {
 	for (var i = gn.data.edges.length - 1; i > -1;i--){
 		deleteEdge(gn.data.edges[i]);
+<<<<<<< HEAD
 	}
 	globals.graphNodes[globals.graphNodes.indexOf(gn)] = null;
 	gn.remove();
@@ -67,6 +94,23 @@ deleteEdge = function (edge) {
 
 var selector, gn, weight, eedge, modif;
 globals.selectedNode = null;
+=======
+	};
+	globals.graphNodes[globals.graphNodes.indexOf(gn)] = null;
+	gn.remove();
+}
+
+deleteEdge = function (edge) {
+	for (var i = 0; i < 2; i++){
+		edge.data.nodes[i].data.edges.splice(edge.data.nodes[i].data.edges.indexOf(edge),1)
+	}
+	edge.remove();
+}
+
+
+var selector, gn, weight, eedge, modif
+globals.selectedNode = null
+>>>>>>> working-ver
 
 function onMouseDown(event) {
 	if (globals.searched) {
@@ -75,12 +119,21 @@ function onMouseDown(event) {
 		globals.secondMovie = function () {};
 		globals.searched = false;
 		return;
+<<<<<<< HEAD
 	};
 	hitresult = project.hitTest(event.point);
 	modif = event.modifiers.clone();
 	gn = selector = edge = eedge = weight = null;
 	if (!hitresult) {
 		var i = 0;
+=======
+	}
+	hitresult = project.hitTest(event.point)
+	modif = event.modifiers.clone()
+	gn = selector = edge = eedge = weight = null;
+	if (!hitresult) {
+		var i = 0
+>>>>>>> working-ver
 		while (globals.graphNodes[i]) {i++;}
 		gn = createGraphNode(event.point,i);
 		if (i < globals.graphNodes.length) {
@@ -109,13 +162,21 @@ function onMouseDown(event) {
 			case 'line':
 				eedge = hitresult.item;
 				if (event.modifiers.command) {
+<<<<<<< HEAD
 					deleteEdge(eedge.parent);
+=======
+					deleteEdge(eedge.parent)
+>>>>>>> working-ver
 				}
 				break;
 			case 'weight':
 				weight = hitresult.item;
 				if (event.modifiers.command) {
+<<<<<<< HEAD
 					deleteEdge(weight.parent);
+=======
+					deleteEdge(weight.parent)
+>>>>>>> working-ver
 				}
 				if (event.modifiers.shift) {
 					weight.data.auto = true;
@@ -129,18 +190,31 @@ function onMouseDown(event) {
 
 
 updateEdgeWeight = function (edge){
+<<<<<<< HEAD
 	var line = edge.children[0];
 	var weight = edge.children[1];
+=======
+	var line = edge.children[0]
+	var weight = edge.children[1]
+>>>>>>> working-ver
 	var difVector = line.segments[0].point - line.segments[1].point;
 	weight.position = line.position + difVector.normalize(10).rotate(90);
 	if (weight.data.auto){
 		weight.content = Math.ceil(difVector.length).toString();
 	}
+<<<<<<< HEAD
 };
 
 
 var edge = null;
 var ngn = null;
+=======
+}
+
+
+var edge = null
+var ngn = null
+>>>>>>> working-ver
 function onMouseDrag(event) {
 	if (gn) {
 		if (modif.shift) {
@@ -187,7 +261,11 @@ function onMouseDrag(event) {
 function onMouseUp(event){
 	if (edge) {
 		hitresult = project.hitTest(event.point);
+<<<<<<< HEAD
 		if(['circle','label'].indexOf(hitresult.item.name) !== -1) {
+=======
+		if(['circle','label'].indexOf(hitresult.item.name) != -1) {
+>>>>>>> working-ver
 			ngn = hitresult.item.parent;
 			if ([].concat.apply([],gn.data.edges.map(function (edge) {
 						return edge.data.nodes;
@@ -198,7 +276,11 @@ function onMouseUp(event){
 				updateEdgeWeight(finaledge);
 				gn.data.edges.push(finaledge);
 				ngn.data.edges.push(finaledge);
+<<<<<<< HEAD
 			}
+=======
+			};
+>>>>>>> working-ver
 		}
 		edge.remove();
 		edge = null;

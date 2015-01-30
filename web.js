@@ -1,13 +1,24 @@
+<<<<<<< HEAD
 var gzippo = require('gzippo');
 var express = require('express');
 var app = express();
 var logger = require('morgan');
+=======
+// var gzippo = require('gzippo');
+var express = require('express');
+var app = express();
+// var logger = require('morgan');
+>>>>>>> working-ver
  var path = require('path')
 
 // app.use(logger);
 
 // app.use(express.static(path.join(__dirname, 'dist')));
+<<<<<<< HEAD
 app.use(gzippo.staticGzip("" + __dirname + "/dist"));
+=======
+// app.use(gzippo.staticGzip("" + __dirname + "/dist"));
+>>>>>>> working-ver
 // app.listen(process.env.PORT || 5000);
 
 

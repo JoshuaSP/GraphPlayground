@@ -1,5 +1,11 @@
+<<<<<<< HEAD
 if (globals) {
 	globals.scope2 = this;
+=======
+
+if (typeof globals !== "undefined") {
+	globals.scope2 = this
+>>>>>>> working-ver
 } else {
 	globals = {scope2: this};
 }
@@ -8,7 +14,9 @@ globals.secondMovie = function (){};
 
 function onFrame(event) {
 	TWEEN.update();
-	globals.secondMovie();
+	if (typeof globals.secondMovie !== "undefined") {
+		globals.secondMovie();
+	}
 }
 
 var tn = null;

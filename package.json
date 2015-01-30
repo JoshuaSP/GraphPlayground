@@ -32,8 +32,11 @@
   },
   "dependencies": {
     "express": "^4.11.1",
+<<<<<<< HEAD
     "gzippo": "^0.2.0",
     "morgan": "^1.5.1",
+=======
+>>>>>>> working-ver
     "paper": "^0.9.21"
   }
 }

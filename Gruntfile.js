@@ -117,8 +117,8 @@ module.exports = function (grunt) {
           dot: true,
           src: [
             '.tmp',
-            '<%= config.dist %>/*',
-            '!<%= config.dist %>/.git*'
+            // '<%= config.dist %>/*',
+            // '!<%= config.dist %>/.git*'
           ]
         }]
       },
